@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Mission Control 🚀</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&family=Baloo+2:wght@700;800&display=swap');
+:root{
+  --bg:#0a0820;--surface:#13103a;--card:#1c1850;
+  --accent1:#ff6b6b;--accent2:#ffd93d;--accent3:#6bcb77;
+  --accent4:#4d96ff;--purple:#c084fc;--text:#f0edff;--muted:#8b87b0;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+
+/* Stars */
+.stars{position:fixed;inset:0;z-index:0;pointer-events:none}
+.star{position:absolute;border-radius:50%;background:white;animation:twinkle var(--dur,3s) infinite ease-in-out var(--delay,0s);opacity:0}
+@keyframes twinkle{0%,100%{opacity:0;transform:scale(1)}50%{opacity:var(--op,.8);transform:scale(1.4)}}
+
+.screen{display:none;position:relative;z-index:1}
+.screen.active{display:flex;flex-direction:column;align-items:center;min-height:100vh;padding:20px 16px}
+
+/* ── HOME SCREEN ── */
+#home-screen{justify-content:flex-start;padding-top:36px}
+.logo{font-family:'Baloo 2',cursive;font-size:clamp(2rem,7vw,3rem);font-weight:800;background:linear-gradient(135deg,var(--accent4),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-align:center;margin-bottom:4px}
+.logo-sub{color:var(--muted);font-size:.9rem;text-align:center;margin-bottom:32px}
+
+.name-card{background:var(--surface);border:2px solid var(--card);border-radius:20px;padding:20px;width:100%;max-width:480px;margin-bottom:20px}
+.name-card h2{font-family:'Baloo 2',cursive;font-size:1.05rem;color:var(--accent2);margin-bottom:12px}
+.field-label{display:block;font-size:.8rem;color:var(--muted);margin-bottom:4px}
+.text-input{width:100%;padding:11px 15px;background:var(--card);border:2px solid transparent;border-radius:11px;color:var(--text);font-family:'Nunito',sans-serif;font-size:1rem;font-weight:700;outline:none;transition:border-color .2s}
+.text-input:focus{border-color:var(--accent4)}
+.text-input::placeholder{color:var(--muted);font-weight:400}
+
+.routines-section{width:100%;max-width:480px;margin-bottom:20px}
+.section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.section-title{font-family:'Baloo 2',cursive;font-size:1.1rem;color:var(--accent2)}
+.btn-add-routine{background:var(--accent4);border:none;border-radius:9px;color:white;font-family:'Nunito',sans-serif;font-size:.85rem;font-weight:800;padding:8px 14px;cursor:pointer;transition:transform .15s}
+.btn-add-routine:hover{transform:scale(1.05)}
+
+.routine-card{background:var(--surface);border:2px solid var(--card);border-radius:16px;padding:16px 18px;margin-bottom:12px;transition:border-color .2s}
+.routine-card-header{display:flex;align-items:center;gap:12px;margin-bottom:0}
+.routine-icon{font-size:1.8rem;flex-shrink:0}
+.routine-info{flex:1;min-width:0}
+.routine-name{font-family:'Baloo 2',cursive;font-size:1.05rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.routine-meta{font-size:.75rem;color:var(--muted);margin-top:1px}
+.routine-actions{display:flex;gap:6px}
+.btn-icon-sm{background:var(--card);border:none;border-radius:8px;color:var(--muted);font-size:1rem;width:34px;height:34px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0}
+.btn-icon-sm:hover{color:var(--text);background:#2a2670}
+.btn-icon-sm.danger:hover{color:var(--accent1)}
+.btn-launch{background:linear-gradient(135deg,var(--accent4),var(--purple));border:none;border-radius:10px;color:white;font-family:'Baloo 2',cursive;font-size:.95rem;font-weight:700;padding:8px 16px;cursor:pointer;transition:transform .15s;white-space:nowrap}
+.btn-launch:hover{transform:scale(1.05)}
+
+/* ── EDIT ROUTINE SCREEN ── */
+#edit-screen{justify-content:flex-start;padding-top:24px}
+.edit-header{width:100%;max-width:480px;display:flex;align-items:center;gap:12px;margin-bottom:22px}
+.btn-back{background:var(--card);border:none;border-radius:10px;color:var(--muted);font-size:1.2rem;width:40px;height:40px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:color .2s}
+.btn-back:hover{color:var(--text)}
+.edit-title{font-family:'Baloo 2',cursive;font-size:1.3rem;font-weight:800;color:var(--accent2)}
+
+.edit-card{background:var(--surface);border:2px solid var(--card);border-radius:20px;padding:20px;width:100%;max-width:480px;margin-bottom:16px}
+.edit-card h3{font-family:'Baloo 2',cursive;font-size:1rem;color:var(--accent2);margin-bottom:14px}
+
+.routine-meta-row{display:flex;gap:10px;margin-bottom:4px}
+.emoji-pick{background:var(--card);border:2px solid transparent;border-radius:11px;color:var(--text);font-size:1.3rem;padding:10px 12px;cursor:pointer;outline:none;flex-shrink:0}
+
+/* Voice style */
+.voice-row{display:flex;gap:8px;flex-wrap:wrap}
+.voice-opt{flex:1;min-width:90px}
+.voice-opt label{display:block;background:var(--card);border:2px solid transparent;border-radius:10px;padding:9px 10px;cursor:pointer;text-align:center;transition:all .2s;color:var(--text);font-weight:700;font-size:.82rem}
+.voice-opt input{display:none}
+.voice-opt input:checked+label{border-color:var(--accent4);background:rgba(77,150,255,.15);color:var(--accent4)}
+
+/* Drag list */
+.drag-list{list-style:none;margin-bottom:12px}
+.drag-item{display:flex;align-items:center;gap:10px;background:var(--card);border:2px solid transparent;border-radius:12px;padding:11px 14px;margin-bottom:8px;transition:all .2s;user-select:none;touch-action:none}
+.drag-item.dragging{opacity:.5;border-color:var(--accent4);background:var(--surface)}
+.drag-item.drag-over{border-color:var(--accent2);transform:scale(1.01)}
+.drag-handle{color:var(--muted);font-size:1.1rem;cursor:grab;flex-shrink:0;padding:0 2px;touch-action:none}
+.drag-handle:active{cursor:grabbing}
+.drag-emoji{font-size:1.2rem;flex-shrink:0}
+.drag-text{flex:1;font-weight:700;font-size:.88rem;line-height:1.3}
+.drag-del{background:none;border:none;color:var(--accent1);cursor:pointer;font-size:1rem;opacity:.5;transition:opacity .2s;padding:0 4px;flex-shrink:0}
+.drag-del:hover{opacity:1}
+
+.add-row{display:flex;gap:8px;align-items:center}
+.emoji-sel{background:var(--card);border:2px solid transparent;border-radius:10px;color:var(--text);font-size:1.2rem;padding:9px;cursor:pointer;outline:none;flex-shrink:0}
+.add-input{flex:1;padding:10px 13px;background:var(--card);border:2px solid transparent;border-radius:10px;color:var(--text);font-family:'Nunito',sans-serif;font-size:.9rem;font-weight:700;outline:none;transition:border-color .2s}
+.add-input:focus{border-color:var(--accent4)}
+.add-input::placeholder{color:var(--muted);font-weight:400}
+.btn-add{background:var(--accent4);border:none;border-radius:10px;color:white;font-size:1.3rem;width:42px;height:42px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:transform .15s}
+.btn-add:hover{transform:scale(1.1)}
+
+.btn-save{width:100%;max-width:480px;padding:16px;background:linear-gradient(135deg,var(--accent3),#2dd4bf);border:none;border-radius:16px;color:#052e16;font-family:'Baloo 2',cursive;font-size:1.3rem;font-weight:800;cursor:pointer;transition:transform .15s,box-shadow .2s;box-shadow:0 6px 24px rgba(107,203,119,.3);margin-bottom:12px}
+.btn-save:hover{transform:translateY(-2px)}
+
+/* ── MISSION SCREEN ── */
+#mission-screen{justify-content:flex-start;padding-top:18px}
+.mission-header{text-align:center;margin-bottom:16px;width:100%}
+.mission-title{font-family:'Baloo 2',cursive;font-size:clamp(1.4rem,5vw,2rem);font-weight:800;color:var(--accent2)}
+.mission-sub{color:var(--muted);font-size:.82rem;margin-top:2px}
+.progress-wrap{width:100%;max-width:480px;background:var(--card);border-radius:999px;height:12px;margin:0 auto 18px;overflow:hidden}
+.progress-bar{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--accent3),var(--accent2));transition:width .6s cubic-bezier(.68,-.55,.27,1.55);width:0%}
+.task-cards{width:100%;max-width:480px;display:flex;flex-direction:column;gap:9px;margin-bottom:16px}
+.task-card{background:var(--surface);border:3px solid var(--card);border-radius:15px;padding:13px 16px;display:flex;align-items:center;gap:13px;transition:all .3s ease;position:relative;overflow:hidden}
+.task-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,var(--accent3),#2dd4bf);opacity:0;transition:opacity .3s}
+.task-card.done{border-color:var(--accent3)}.task-card.done::before{opacity:.1}
+.task-card.active-card{border-color:var(--accent4);animation:pulse-card 2s ease-in-out infinite}
+@keyframes pulse-card{0%,100%{box-shadow:0 0 0 3px rgba(77,150,255,.2)}50%{box-shadow:0 0 0 8px rgba(77,150,255,.05)}}
+.task-card-emoji{font-size:1.9rem;position:relative;z-index:1;flex-shrink:0;transition:transform .3s}
+.task-card.done .task-card-emoji{transform:scale(1.2) rotate(12deg)}
+.task-card-body{flex:1;position:relative;z-index:1}
+.task-card-name{font-family:'Baloo 2',cursive;font-size:.98rem;font-weight:700;line-height:1.2}
+.task-card-hint{font-size:.72rem;color:var(--muted);margin-top:2px}
+.task-card.done .task-card-name{text-decoration:line-through;opacity:.5}
+.task-check{width:32px;height:32px;border-radius:50%;border:3px solid var(--card);display:flex;align-items:center;justify-content:center;font-size:.95rem;position:relative;z-index:1;flex-shrink:0;background:var(--card);transition:all .3s cubic-bezier(.68,-.55,.27,1.55)}
+.task-card.done .task-check{background:var(--accent3);border-color:var(--accent3);transform:scale(1.15)}
+
+/* Voice bubble */
+.voice-bubble{width:100%;max-width:480px;border-radius:15px;padding:14px 18px;font-family:'Baloo 2',cursive;font-size:.98rem;margin-bottom:14px;min-height:58px;display:flex;align-items:center;justify-content:center;text-align:center;line-height:1.5;transition:all .35s ease;border:2px solid var(--accent4);background:var(--surface);color:var(--accent4)}
+.voice-bubble.nudge{border-color:var(--accent1);background:rgba(255,107,107,.08);color:var(--accent1);animation:nudge-shake .4s ease}
+@keyframes nudge-shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.voice-bubble.praise{border-color:var(--accent3);background:rgba(107,203,119,.08);color:var(--accent3)}
+
+/* Mic */
+.mic-zone{width:100%;max-width:480px;display:flex;flex-direction:column;align-items:center;gap:8px;margin-bottom:12px}
+.mic-btn{width:84px;height:84px;border-radius:50%;background:linear-gradient(135deg,var(--accent4),var(--purple));border:none;font-size:2.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 28px rgba(77,150,255,.4);transition:transform .15s}
+.mic-btn:active{transform:scale(.95)}
+.mic-btn.listening{animation:mic-pulse 1.2s ease-in-out infinite;background:linear-gradient(135deg,var(--accent1),#ff8e53);box-shadow:0 8px 36px rgba(255,107,107,.5)}
+@keyframes mic-pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+.mic-label{font-size:.8rem;color:var(--muted);font-weight:700;text-align:center}
+.listen-dots{display:none;gap:5px;align-items:center}
+.listen-dots.active{display:flex}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--accent1);animation:dotbounce .8s ease-in-out infinite}
+.dot:nth-child(2){animation-delay:.15s}.dot:nth-child(3){animation-delay:.3s}
+@keyframes dotbounce{0%,100%{transform:translateY(0);opacity:.4}50%{transform:translateY(-5px);opacity:1}}
+
+.tap-buttons{width:100%;max-width:480px;display:flex;gap:10px;margin-bottom:10px}
+.btn-yes,.btn-no{flex:1;padding:13px;border:none;border-radius:13px;font-family:'Baloo 2',cursive;font-size:1.25rem;font-weight:800;cursor:pointer;transition:transform .15s;display:flex;align-items:center;justify-content:center;gap:6px}
+.btn-yes{background:linear-gradient(135deg,var(--accent3),#2dd4bf);color:#052e16;box-shadow:0 5px 18px rgba(107,203,119,.3)}
+.btn-no{background:linear-gradient(135deg,var(--accent1),#ff8e53);color:white;box-shadow:0 5px 18px rgba(255,107,107,.3)}
+.btn-yes:active,.btn-no:active{transform:scale(.96)}
+.btn-quit{background:none;border:2px solid var(--card);border-radius:10px;color:var(--muted);font-size:.8rem;font-weight:700;padding:7px 16px;cursor:pointer;transition:all .2s}
+.btn-quit:hover{color:var(--text);border-color:var(--muted)}
+
+/* ── REWARD ── */
+#reward-screen{justify-content:center;text-align:center}
+.firework-emoji{font-size:5rem;animation:bounce .6s ease infinite alternate;display:block;margin-bottom:14px}
+@keyframes bounce{from{transform:translateY(0) scale(1)}to{transform:translateY(-18px) scale(1.1)}}
+.reward-title{font-family:'Baloo 2',cursive;font-size:clamp(1.9rem,7vw,3rem);font-weight:800;background:linear-gradient(135deg,var(--accent2),var(--accent1));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px}
+.reward-msg{font-size:1rem;color:var(--muted);margin-bottom:22px;max-width:340px}
+.reward-box{background:var(--surface);border:3px solid var(--accent2);border-radius:18px;padding:20px 26px;font-family:'Baloo 2',cursive;font-size:1.25rem;color:var(--accent2);margin-bottom:26px;max-width:400px;box-shadow:0 8px 36px rgba(255,217,61,.18)}
+.btn-home{background:var(--surface);border:2px solid var(--muted);border-radius:12px;color:var(--muted);font-family:'Nunito',sans-serif;font-size:1rem;font-weight:700;padding:12px 26px;cursor:pointer;transition:all .2s}
+.btn-home:hover{color:var(--text);border-color:var(--text)}
+
+/* Confetti */
+.confetti-piece{position:fixed;border-radius:2px;animation:fall var(--fd) linear forwards;top:-20px;z-index:999}
+@keyframes fall{to{transform:translateY(110vh) rotate(720deg);opacity:0}}
+
+/* Snack */
+.snack{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--card);border:2px solid var(--accent4);border-radius:12px;padding:12px 22px;font-weight:700;color:var(--accent4);font-size:.88rem;z-index:200;transition:transform .3s cubic-bezier(.68,-.55,.27,1.55);white-space:nowrap;max-width:90vw;text-align:center}
+.snack.show{transform:translateX(-50%) translateY(0)}
+
+/* Mic permission modal */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:300;align-items:center;justify-content:center;padding:20px}
+.modal-overlay.show{display:flex}
+.modal{background:var(--surface);border:2px solid var(--accent4);border-radius:22px;padding:26px 24px;max-width:400px;width:100%;text-align:center}
+.modal-icon{font-size:3rem;margin-bottom:12px;display:block}
+.modal-title{font-family:'Baloo 2',cursive;font-size:1.4rem;color:var(--accent4);margin-bottom:10px}
+.modal-body{color:var(--muted);font-size:.9rem;line-height:1.6;margin-bottom:20px}
+.modal-body strong{color:var(--text)}
+.modal-steps{text-align:left;background:var(--card);border-radius:12px;padding:14px 16px;margin-bottom:18px}
+.modal-steps li{color:var(--text);font-size:.88rem;margin-bottom:8px;padding-left:4px}
+.modal-steps li:last-child{margin-bottom:0}
+.btn-modal-close{width:100%;padding:14px;background:linear-gradient(135deg,var(--accent4),var(--purple));border:none;border-radius:13px;color:white;font-family:'Baloo 2',cursive;font-size:1.1rem;font-weight:800;cursor:pointer}
+</style>
+</head>
+<body>
+
+<div class="stars" id="stars"></div>
+<div class="snack" id="snack"></div>
+
+<!-- Mic permission modal -->
+<div class="modal-overlay" id="mic-modal">
+  <div class="modal">
+    <span class="modal-icon">🎤</span>
+    <div class="modal-title">Microphone Permission</div>
+    <p class="modal-body">The app needs your microphone so it can hear the answers. Here's how to allow it:</p>
+    <ol class="modal-steps" id="mic-steps">
+      <li>A pop-up will appear at the top of your screen asking about the microphone</li>
+      <li>Tap <strong>Allow</strong></li>
+      <li>That's it — come back and tap the mic button!</li>
+    </ol>
+    <button class="btn-modal-close" onclick="closeMicModal()">Got it, let's try again! 👍</button>
+  </div>
+</div>
+
+<!-- ══ HOME ══ -->
+<div class="screen active" id="home-screen">
+  <div class="logo">🚀 Mission Control</div>
+  <p class="logo-sub">Choose a routine to launch</p>
+
+  <div class="name-card">
+    <h2>👤 Who's the superstar?</h2>
+    <span class="field-label">Name</span>
+    <input class="text-input" id="kid-name" placeholder="e.g. Dan" maxlength="20" oninput="saveName()">
+  </div>
+
+  <div class="routines-section">
+    <div class="section-header">
+      <span class="section-title">📋 Your Routines</span>
+      <button class="btn-add-routine" onclick="newRoutine()">＋ New Routine</button>
+    </div>
+    <div id="routine-list"></div>
+  </div>
+</div>
+
+<!-- ══ EDIT ROUTINE ══ -->
+<div class="screen" id="edit-screen">
+  <div class="edit-header">
+    <button class="btn-back" onclick="goHome()">←</button>
+    <div class="edit-title" id="edit-title">Edit Routine</div>
+  </div>
+
+  <div class="edit-card" style="margin-bottom:14px">
+    <h3>Routine name &amp; icon</h3>
+    <div class="routine-meta-row">
+      <select class="emoji-pick" id="edit-emoji">
+        <option>🌅</option><option>🌙</option><option>🏫</option>
+        <option>⚽</option><option>🎮</option><option>🍽️</option>
+        <option>🛁</option><option>🌟</option><option>🏋️</option><option>🎒</option>
+      </select>
+      <input class="text-input" id="edit-name" placeholder="e.g. Morning Routine" maxlength="30" style="margin-bottom:0">
+    </div>
+  </div>
+
+  <div class="edit-card" style="margin-bottom:14px">
+    <h3>Reward 🏆</h3>
+    <input class="text-input" id="edit-reward" placeholder="e.g. 30 minutes of Minecraft!" maxlength="80" style="margin-bottom:0">
+  </div>
+
+  <div class="edit-card" style="margin-bottom:14px">
+    <h3>🎙️ Voice style</h3>
+    <div class="voice-row">
+      <div class="voice-opt"><input type="radio" name="vt" id="v-friendly" value="friendly" checked><label for="v-friendly">😊 Friendly</label></div>
+      <div class="voice-opt"><input type="radio" name="vt" id="v-robot" value="robot"><label for="v-robot">🤖 Robot</label></div>
+      <div class="voice-opt"><input type="radio" name="vt" id="v-slow" value="slow"><label for="v-slow">🐢 Slow &amp; Clear</label></div>
+    </div>
+  </div>
+
+  <div class="edit-card" style="margin-bottom:16px">
+    <h3>📋 Tasks — drag to reorder</h3>
+    <ul class="drag-list" id="drag-list"></ul>
+    <div class="add-row">
+      <select class="emoji-sel" id="task-emoji">
+        <option>🦷</option><option>🛁</option><option>👕</option><option>🧦</option>
+        <option>🍳</option><option>🎒</option><option>💊</option><option>🥛</option>
+        <option>📚</option><option>🛏️</option><option>🚿</option><option>🧴</option>
+        <option>👟</option><option>🥣</option><option>🧹</option><option>😴</option>
+        <option>📖</option><option>🧸</option><option>🌙</option><option>💡</option>
+      </select>
+      <input class="add-input" id="new-task-input" placeholder="Add a task..." maxlength="40">
+      <button class="btn-add" onclick="addTaskToEdit()">＋</button>
+    </div>
+  </div>
+
+  <button class="btn-save" onclick="saveRoutine()">💾 Save Routine</button>
+</div>
+
+<!-- ══ MISSION ══ -->
+<div class="screen" id="mission-screen">
+  <div class="mission-header">
+    <div class="mission-title" id="mission-title">Mission</div>
+    <div class="mission-sub" id="mission-sub">Complete all tasks!</div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="progress-bar"></div></div>
+  <div class="task-cards" id="task-cards"></div>
+  <div class="voice-bubble" id="voice-bubble">Get ready...</div>
+  <div class="mic-zone">
+    <button class="mic-btn" id="mic-btn" onclick="toggleListen()">🎤</button>
+    <div class="listen-dots" id="listen-dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+    <div class="mic-label" id="mic-label">Listening for your answer...</div>
+  </div>
+  <div class="tap-buttons">
+    <button class="btn-yes" onclick="answerYes()">✅ Yes!</button>
+    <button class="btn-no" onclick="answerNo()">🔄 Not yet</button>
+  </div>
+  <button class="btn-quit" onclick="goHome()">✕ Quit mission</button>
+</div>
+
+<!-- ══ REWARD ══ -->
+<div class="screen" id="reward-screen">
+  <span class="firework-emoji">🎉</span>
+  <div class="reward-title" id="reward-title">You did it!</div>
+  <p class="reward-msg" id="reward-msg">Every task — done. Absolute legend.</p>
+  <div class="reward-box" id="reward-box">🏆 Your reward...</div>
+  <button class="btn-home" onclick="goHome()">↩ Back to routines</button>
+</div>
+
+<script>
+// ── Stars ────────────────────────────────────────────────
+(function(){
+  const c=document.getElementById('stars');
+  for(let i=0;i<80;i++){
+    const s=document.createElement('div');s.className='star';
+    const sz=Math.random()*2.5+.5;
+    s.style.cssText=`width:${sz}px;height:${sz}px;left:${Math.random()*100}%;top:${Math.random()*100}%;--dur:${Math.random()*4+2}s;--delay:${Math.random()*5}s;--op:${Math.random()*.7+.3}`;
+    c.appendChild(s);
+  }
+})();
+
+// ── Default nudges per task keyword ──────────────────────
+const NUDGE_MAP = {
+  'teeth':  ["Uh oh! The sugar monsters are having a PARTY in your mouth! Let's kick them out!","Nasty germs love to feast on lovely teeth — let's send them packing!","Your teeth are crying out for that toothbrush — go rescue them!"],
+  'brush':  ["Uh oh! The sugar monsters are having a PARTY in your mouth! Let's kick them out!","Nasty germs love to feast on lovely teeth — let's send them packing!"],
+  'wash':   ["The stinky cloud is forming! Invisible, but everyone can smell it — time to blast it away!","Soap is basically a superpower against germs. Go activate yours!","Yesterday's germs are still hanging around — time to evict them!"],
+  'shower': ["The stinky cloud is forming! Invisible, but everyone can smell it — time to blast it away!","Soap is basically a superpower against germs. Go activate yours!"],
+  'dressed':["Your uniform is sitting there feeling very lonely! It needs a hero — and that's you!","Pyjamas are amazing, but they are NOT allowed at school. Time to suit up!","Secret agent rule number one: always look the part. Go get changed!"],
+  'clothes':["Pyjamas are amazing, but they are NOT allowed at school. Time to suit up!","Your outfit won't put itself on — go be the hero!"],
+  'breakfast':["Your brain is running on empty! It needs fuel or it'll fall asleep in class!","Breakfast is basically a cheat code for your brain. Go unlock it!","Your tummy is planning to be very grumpy later. Feed it now!"],
+  'eat':    ["Your brain is running on empty! Feed it or it'll go on strike!","Food is fuel — go fill up your tank!"],
+  'bag':    ["Imagine arriving at school with nothing — mission fail! Go pack that bag!","Your homework is sitting in there feeling nervous. Go rescue it!","An unpacked bag is a disaster waiting to happen. Be the hero!"],
+  'pack':   ["Imagine arriving at school with nothing — mission fail! Go pack that bag!","Your homework is sitting in there feeling nervous. Go rescue it!"],
+  'shoes':  ["Bare feet at school? I don't think so! Go find those shoes!","Your shoes are lonely without your feet in them. Go reunite them!"],
+  'sleep':  ["Your bed is calling your name! It's very cosy in there — go find out!","Sleep is a superpower. The sooner you're in bed, the sooner tomorrow comes!"],
+  'bed':    ["Your pillow is waiting! Go give it a cuddle!","The sooner you're in bed, the sooner tomorrow arrives!"],
+  'story':  ["Stories are amazing! Go pick a great one — you've earned it!","Reading before sleep gives you incredible dreams. Go choose your book!"],
+  'read':   ["Reading is a superpower! Go charge yours up!","Books are portals to other worlds — go open one!"],
+  'medicine':["This one is really important! Your body needs it — go take it now!","Medicine helps you feel your best — don't forget it!"],
+  'tablet': ["This one is really important! Your body needs it — go take it now!"],
+};
+
+function getNudges(taskText){
+  const lower = taskText.toLowerCase();
+  for(const [key, nudges] of Object.entries(NUDGE_MAP)){
+    if(lower.includes(key)) return nudges;
+  }
+  return [
+    `Go on — every task gets you one step closer to your reward!`,
+    `You've got this! It'll only take a minute!`,
+    `Off you go — I'll be here when you're back!`
+  ];
+}
+
+// ── Data ─────────────────────────────────────────────────
+let routines = [];
+let kidName  = '';
+let editingIdx = -1; // -1 = new routine
+let activeRoutine = null;
+let currentIdx = 0;
+let recognizer = null;
+let isListening = false;
+
+function loadData(){
+  try{
+    const r = localStorage.getItem('mc_routines');
+    if(r) routines = JSON.parse(r);
+    kidName = localStorage.getItem('mc_name')||'';
+  } catch(e){}
+
+  if(!routines.length){
+    routines = [
+      {
+        id: Date.now(),
+        name:'Morning Routine', emoji:'🌅', reward:'30 minutes of screen time!', voice:'friendly',
+        tasks:[
+          {emoji:'🦷',text:'Brush your teeth'},
+          {emoji:'🚿',text:'Have a shower'},
+          {emoji:'👕',text:'Get dressed'},
+          {emoji:'🥣',text:'Eat your breakfast'},
+          {emoji:'🎒',text:'Pack your school bag'},
+        ]
+      },
+      {
+        id: Date.now()+1,
+        name:'Bedtime Routine', emoji:'🌙', reward:'Extra story time!', voice:'slow',
+        tasks:[
+          {emoji:'🛁',text:'Have a bath'},
+          {emoji:'🦷',text:'Brush your teeth'},
+          {emoji:'😴',text:'Put your pyjamas on'},
+          {emoji:'📖',text:'Read your book'},
+          {emoji:'💡',text:'Lights out'},
+        ]
+      }
+    ];
+    saveData();
+  }
+}
+
+function saveData(){
+  try{
+    localStorage.setItem('mc_routines', JSON.stringify(routines));
+    localStorage.setItem('mc_name', kidName);
+  }catch(e){}
+}
+
+function saveName(){
+  kidName = document.getElementById('kid-name').value.trim();
+  saveData();
+}
+
+// ── Home screen ───────────────────────────────────────────
+function renderHome(){
+  document.getElementById('kid-name').value = kidName;
+  const list = document.getElementById('routine-list');
+  list.innerHTML='';
+  if(!routines.length){
+    list.innerHTML=`<p style="color:var(--muted);text-align:center;padding:20px 0;font-size:.9rem">No routines yet — tap + New Routine to create one!</p>`;
+    return;
+  }
+  routines.forEach((r,i)=>{
+    const div=document.createElement('div');
+    div.className='routine-card';
+    div.innerHTML=`
+      <div class="routine-card-header">
+        <div class="routine-icon">${r.emoji}</div>
+        <div class="routine-info">
+          <div class="routine-name">${r.name}</div>
+          <div class="routine-meta">${r.tasks.length} task${r.tasks.length!==1?'s':''} · ${r.reward||'No reward set'}</div>
+        </div>
+        <div class="routine-actions">
+          <button class="btn-icon-sm" onclick="editRoutine(${i})" title="Edit">✏️</button>
+          <button class="btn-icon-sm danger" onclick="deleteRoutine(${i})" title="Delete">🗑️</button>
+          <button class="btn-launch" onclick="launchRoutine(${i})">▶ Start</button>
+        </div>
+      </div>
+    `;
+    list.appendChild(div);
+  });
+}
+
+function deleteRoutine(i){
+  if(!confirm(`Delete "${routines[i].name}"?`))return;
+  routines.splice(i,1);
+  saveData();
+  renderHome();
+}
+
+// ── Edit screen ───────────────────────────────────────────
+let editTasks = []; // working copy while editing
+
+function newRoutine(){
+  editingIdx = -1;
+  editTasks = [];
+  document.getElementById('edit-title').textContent='New Routine';
+  document.getElementById('edit-emoji').value='🌟';
+  document.getElementById('edit-name').value='';
+  document.getElementById('edit-reward').value='';
+  document.querySelector('input[name="vt"][value="friendly"]').checked=true;
+  renderDragList();
+  switchScreen('edit-screen');
+}
+
+function editRoutine(i){
+  editingIdx = i;
+  const r = routines[i];
+  editTasks = r.tasks.map(t=>({...t}));
+  document.getElementById('edit-title').textContent='Edit Routine';
+  document.getElementById('edit-emoji').value = r.emoji||'🌟';
+  document.getElementById('edit-name').value  = r.name;
+  document.getElementById('edit-reward').value= r.reward||'';
+  const vt = document.querySelector(`input[name="vt"][value="${r.voice||'friendly'}"]`);
+  if(vt) vt.checked=true;
+  renderDragList();
+  switchScreen('edit-screen');
+}
+
+function saveRoutine(){
+  const name   = document.getElementById('edit-name').value.trim();
+  const emoji  = document.getElementById('edit-emoji').value;
+  const reward = document.getElementById('edit-reward').value.trim();
+  const voice  = document.querySelector('input[name="vt"]:checked')?.value||'friendly';
+  if(!name){showSnack('Give your routine a name!');return;}
+  if(!editTasks.length){showSnack('Add at least one task!');return;}
+  const obj = {id:editingIdx>=0?routines[editingIdx].id:Date.now(), name, emoji, reward, voice, tasks:[...editTasks]};
+  if(editingIdx>=0) routines[editingIdx]=obj;
+  else routines.push(obj);
+  saveData();
+  goHome();
+}
+
+// ── Drag to reorder ───────────────────────────────────────
+let dragSrcIdx = null;
+
+function renderDragList(){
+  const ul = document.getElementById('drag-list');
+  ul.innerHTML='';
+  editTasks.forEach((t,i)=>{
+    const li=document.createElement('li');
+    li.className='drag-item';
+    li.draggable=true;
+    li.dataset.idx=i;
+    li.innerHTML=`
+      <span class="drag-handle" title="Drag to reorder">☰</span>
+      <span class="drag-emoji">${t.emoji}</span>
+      <span class="drag-text">${t.text}</span>
+      <button class="drag-del" onclick="removeEditTask(${i})">✕</button>
+    `;
+    // Desktop drag events
+    li.addEventListener('dragstart', e=>{dragSrcIdx=i;li.classList.add('dragging');});
+    li.addEventListener('dragend',   ()=>li.classList.remove('dragging'));
+    li.addEventListener('dragover',  e=>{e.preventDefault();li.classList.add('drag-over');});
+    li.addEventListener('dragleave', ()=>li.classList.remove('drag-over'));
+    li.addEventListener('drop', e=>{
+      e.preventDefault();
+      li.classList.remove('drag-over');
+      if(dragSrcIdx===null||dragSrcIdx===i)return;
+      const moved=editTasks.splice(dragSrcIdx,1)[0];
+      editTasks.splice(i,0,moved);
+      dragSrcIdx=null;
+      renderDragList();
+    });
+    // Touch drag events
+    setupTouchDrag(li, i);
+    ul.appendChild(li);
+  });
+}
+
+function setupTouchDrag(el, idx){
+  let startY, startScrollY, clone, listRect;
+  const handle = el.querySelector('.drag-handle');
+
+  handle.addEventListener('touchstart', e=>{
+    e.preventDefault();
+    const touch = e.touches[0];
+    startY = touch.clientY;
+    startScrollY = window.scrollY;
+    dragSrcIdx = idx;
+    listRect = document.getElementById('drag-list').getBoundingClientRect();
+
+    clone = el.cloneNode(true);
+    clone.style.cssText=`position:fixed;left:${el.getBoundingClientRect().left}px;top:${el.getBoundingClientRect().top}px;width:${el.offsetWidth}px;opacity:.85;z-index:500;pointer-events:none;border:2px solid var(--accent4);border-radius:12px;background:var(--surface);`;
+    document.body.appendChild(clone);
+    el.style.opacity='.3';
+  },{passive:false});
+
+  handle.addEventListener('touchmove', e=>{
+    e.preventDefault();
+    if(!clone)return;
+    const touch = e.touches[0];
+    const dy = touch.clientY - startY;
+    clone.style.top = (parseFloat(clone.style.top)+dy)+'px';
+    startY = touch.clientY;
+
+    // Find which item we're hovering over
+    const items = [...document.querySelectorAll('.drag-item')];
+    items.forEach(item=>{item.classList.remove('drag-over');});
+    const hovered = items.find(item=>{
+      const r=item.getBoundingClientRect();
+      return touch.clientY>=r.top && touch.clientY<=r.bottom;
+    });
+    if(hovered && parseInt(hovered.dataset.idx)!==dragSrcIdx){
+      hovered.classList.add('drag-over');
+    }
+  },{passive:false});
+
+  handle.addEventListener('touchend', e=>{
+    if(!clone)return;
+    clone.remove(); clone=null;
+    el.style.opacity='';
+
+    const touch = e.changedTouches[0];
+    const items = [...document.querySelectorAll('.drag-item')];
+    items.forEach(item=>item.classList.remove('drag-over'));
+    const hovered = items.find(item=>{
+      const r=item.getBoundingClientRect();
+      return touch.clientY>=r.top && touch.clientY<=r.bottom;
+    });
+    if(hovered){
+      const targetIdx = parseInt(hovered.dataset.idx);
+      if(targetIdx!==dragSrcIdx && !isNaN(targetIdx)){
+        const moved=editTasks.splice(dragSrcIdx,1)[0];
+        editTasks.splice(targetIdx,0,moved);
+        renderDragList();
+      }
+    }
+    dragSrcIdx=null;
+  });
+}
+
+function addTaskToEdit(){
+  const inp   = document.getElementById('new-task-input');
+  const emoji = document.getElementById('task-emoji').value;
+  const text  = inp.value.trim();
+  if(!text){showSnack('Type a task first!');return;}
+  editTasks.push({emoji,text});
+  inp.value='';
+  renderDragList();
+}
+document.getElementById('new-task-input').addEventListener('keydown',e=>{if(e.key==='Enter')addTaskToEdit();});
+
+function removeEditTask(i){editTasks.splice(i,1);renderDragList();}
+
+// ── Speech OUTPUT ─────────────────────────────────────────
+let voices=[];
+if('speechSynthesis' in window){
+  speechSynthesis.onvoiceschanged=()=>{voices=speechSynthesis.getVoices();};
+  setTimeout(()=>{voices=speechSynthesis.getVoices();},600);
+}
+
+function getVoiceParams(){
+  const v = activeRoutine?.voice||'friendly';
+  if(v==='robot') return {rate:.8,pitch:.5};
+  if(v==='slow')  return {rate:.68,pitch:1.05};
+  return {rate:.9,pitch:1.2};
+}
+
+function speak(text, onEnd){
+  if(!('speechSynthesis' in window)){if(onEnd)onEnd();return;}
+  speechSynthesis.cancel();
+  const utt=new SpeechSynthesisUtterance(text);
+  const {rate,pitch}=getVoiceParams();
+  utt.rate=rate;utt.pitch=pitch;utt.volume=1;
+  const uk=voices.find(v=>v.lang&&v.lang.startsWith('en-GB'));
+  if(uk)utt.voice=uk;
+  if(onEnd)utt.onend=onEnd;
+  speechSynthesis.speak(utt);
+}
+
+// ── Speech INPUT ──────────────────────────────────────────
+const SpeechRecognition=window.SpeechRecognition||window.webkitSpeechRecognition;
+const hasSR=!!SpeechRecognition;
+
+function setupRecognizer(){
+  if(!hasSR)return;
+  if(recognizer){try{recognizer.abort();}catch(e){}}
+  recognizer=new SpeechRecognition();
+  recognizer.lang='en-GB';
+  recognizer.continuous=false;
+  recognizer.interimResults=false;
+  recognizer.maxAlternatives=5;
+  recognizer.onresult=e=>{
+    const results=Array.from(e.results[0]).map(r=>r.transcript.toLowerCase().trim());
+    setListening(false);
+    handleVoiceResult(results);
+  };
+  recognizer.onerror=err=>{
+    setListening(false);
+    if(err.error==='not-allowed'||err.error==='permission-denied'){
+      showMicModal();
+    } else if(err.error==='no-speech'){
+      // silently restart
+      setTimeout(()=>{if(currentIdx<(activeRoutine?.tasks.length||0))startListen();},800);
+    } else {
+      setBubble(`Didn't catch that — tap YES or NO below 👇`,'');
+    }
+  };
+  recognizer.onend=()=>{setListening(false);};
+}
+
+function toggleListen(){
+  if(isListening){stopListen();}
+  else{startListen();}
+}
+
+function startListen(){
+  if(!hasSR){
+    setBubble(`Voice not supported in this browser — use the buttons below 👇`,'');
+    return;
+  }
+  try{
+    if(!recognizer)setupRecognizer();
+    recognizer.start();
+    setListening(true);
+  }catch(e){
+    // If already started, abort and retry
+    try{recognizer.abort();}catch(e2){}
+    setTimeout(()=>{
+      setupRecognizer();
+      try{recognizer.start();setListening(true);}catch(e3){console.warn(e3);}
+    },300);
+  }
+}
+
+function stopListen(){
+  if(recognizer)try{recognizer.stop();}catch(e){}
+  setListening(false);
+}
+
+function setListening(val){
+  isListening=val;
+  const btn  =document.getElementById('mic-btn');
+  const dots =document.getElementById('listen-dots');
+  const lbl  =document.getElementById('mic-label');
+  if(val){
+    btn.classList.add('listening');btn.textContent='🔴';
+    dots.classList.add('active');lbl.textContent='Listening... say YES or NO';
+  }else{
+    btn.classList.remove('listening');btn.textContent='🎤';
+    dots.classList.remove('active');lbl.textContent='Tap mic to speak, or use buttons below';
+  }
+}
+
+const YES_WORDS=['yes','yeah','yep','yup','done','finished','ready','i did','i have','sure','ok','okay','aye','correct','absolutely','definitely'];
+const NO_WORDS=['no','nope','not yet','not done','nah','negative','haven\'t','wait','no i'];
+
+function handleVoiceResult(results){
+  const combined=results.join(' ');
+  if(YES_WORDS.some(w=>combined.includes(w))){answerYes();}
+  else if(NO_WORDS.some(w=>combined.includes(w))){answerNo();}
+  else{
+    setBubble(`I heard "${results[0]}" — did you mean YES or NO?`,'');
+    speak(`I didn't quite catch that. Can you say yes or no?`,()=>{setTimeout(startListen,400);});
+  }
+}
+
+// ── Mic permission modal ──────────────────────────────────
+function showMicModal(){
+  // Customise instructions based on browser
+  const ua=navigator.userAgent;
+  const steps=document.getElementById('mic-steps');
+  if(/android/i.test(ua)){
+    steps.innerHTML=`
+      <li>Tap the <strong>🔒 lock icon</strong> in the address bar at the top</li>
+      <li>Tap <strong>Permissions</strong> or <strong>Site settings</strong></li>
+      <li>Find <strong>Microphone</strong> and set it to <strong>Allow</strong></li>
+      <li>Come back and refresh the page</li>`;
+  } else {
+    steps.innerHTML=`
+      <li>A pop-up will appear asking about the microphone</li>
+      <li>Tap <strong>Allow</strong></li>
+      <li>If it doesn't appear, tap the <strong>🔒 lock</strong> in your address bar → Microphone → Allow</li>
+      <li>Refresh the page and try again</li>`;
+  }
+  document.getElementById('mic-modal').classList.add('show');
+}
+
+function closeMicModal(){
+  document.getElementById('mic-modal').classList.remove('show');
+  setupRecognizer();
+  setTimeout(startListen,400);
+}
+
+// ── Launch mission ────────────────────────────────────────
+function launchRoutine(i){
+  const name = document.getElementById('kid-name').value.trim();
+  kidName = name || 'Superstar';
+  saveData();
+
+  activeRoutine = {...routines[i], tasks:[...routines[i].tasks]};
+  currentIdx = 0;
+
+  document.getElementById('mission-title').textContent=`${kidName}'s ${activeRoutine.emoji} Mission`;
+  document.getElementById('mission-sub').textContent=`Complete every task to unlock your reward!`;
+
+  buildMissionCards();
+  updateProgress();
+  switchScreen('mission-screen');
+  setupRecognizer();
+
+  setBubble(`Let's go, ${kidName}! 🚀`,'');
+  setTimeout(()=>speakCurrentTask(), 800);
+}
+
+function buildMissionCards(){
+  const c=document.getElementById('task-cards');
+  c.innerHTML='';
+  activeRoutine.tasks.forEach((t,i)=>{
+    const el=document.createElement('div');
+    el.className='task-card'+(i===0?' active-card':'');
+    el.id=`card-${i}`;
+    const el2=document.createElement('div');el2.className='task-card-emoji';el2.textContent=t.emoji;
+    const body=document.createElement('div');body.className='task-card-body';
+    const name=document.createElement('div');name.className='task-card-name';name.textContent=makePrompt(t.text);
+    const hint=document.createElement('div');hint.className='task-card-hint';hint.id=`hint-${i}`;hint.textContent=i===0?'Current task ✨':'Coming up...';
+    const chk=document.createElement('div');chk.className='task-check';chk.id=`check-${i}`;
+    body.appendChild(name);body.appendChild(hint);
+    el.appendChild(el2);el.appendChild(body);el.appendChild(chk);
+    el.onclick=()=>{if(i===currentIdx)speakCurrentTask();};
+    c.appendChild(el);
+  });
+}
+
+function makePrompt(text){
+  const lower=text.trim().toLowerCase();
+  // Already a question
+  if(lower.endsWith('?')) return text.charAt(0).toUpperCase()+text.slice(1);
+  // Already starts with "have you" etc
+  if(lower.startsWith('have you ')||lower.startsWith('did you ')||lower.startsWith('are you ')) return text.charAt(0).toUpperCase()+text.slice(1)+'?';
+
+  // Verb conjugation map: base -> past participle
+  const conjugate = {
+    'brush':'brushed','wash':'washed','eat':'eaten','get dressed':'got dressed',
+    'pack':'packed','put on':'put on','take':'taken','drink':'drunk',
+    'make':'made','tidy':'tidied','feed':'fed','do':'done','have':'had',
+    'read':'read','clean':'cleaned','charge':'charged','find':'found',
+    'say':'said','check':'checked','turn off':'turned off','turn on':'turned on',
+    'switch off':'switched off','switch on':'switched on','lock':'locked',
+    'close':'closed','open':'opened','finish':'finished','complete':'completed',
+    'sort':'sorted','grab':'grabbed','fill':'filled','empty':'emptied',
+    'shower':'had a shower','bath':'had a bath',
+  };
+
+  // Try to match a known verb at the start
+  for(const [base, past] of Object.entries(conjugate)){
+    if(lower.startsWith(base+' ')||lower===base){
+      const rest = lower.slice(base.length).trim();
+      const full = rest ? `${past} ${rest}` : past;
+      return `Have you ${full}?`;
+    }
+  }
+
+  // Fallback — just wrap it
+  return `Have you ${lower}?`;
+}
+
+function speakCurrentTask(){
+  if(currentIdx>=activeRoutine.tasks.length)return;
+  const t=activeRoutine.tasks[currentIdx];
+  const question=`Hey ${kidName}! ${makePrompt(t.text)}`;
+  setBubble(`"${makePrompt(t.text)}"`, '');
+  speak(question,()=>{
+    setTimeout(()=>{
+      setBubble(`I'm listening... say YES or NO! 🎤`,'');
+      startListen();
+    },600);
+  });
+}
+
+function setBubble(text,type){
+  const b=document.getElementById('voice-bubble');
+  b.textContent=text;
+  b.className='voice-bubble'+(type?' '+type:'');
+}
+
+function updateProgress(){
+  const pct=(currentIdx/(activeRoutine?.tasks.length||1))*100;
+  document.getElementById('progress-bar').style.width=pct+'%';
+}
+
+// ── Yes / No ──────────────────────────────────────────────
+function answerYes(){
+  stopListen();
+  if(!activeRoutine||currentIdx>=activeRoutine.tasks.length)return;
+
+  const card =document.getElementById(`card-${currentIdx}`);
+  const check=document.getElementById(`check-${currentIdx}`);
+  const hint =document.getElementById(`hint-${currentIdx}`);
+  card.classList.remove('active-card');
+  card.classList.add('done');
+  check.textContent='✅';
+  hint.textContent='Done! 🎉';
+
+  const praise=[
+    `Amazing, ${kidName}! You're on fire!`,
+    `Yes! Let's go — you're crushing it!`,
+    `Brilliant! Keep going!`,
+    `Smashed it! One step closer to your reward!`,
+    `You absolute legend! Next one!`
+  ];
+  const msg=praise[currentIdx%praise.length];
+  setBubble(msg,'praise');
+  currentIdx++;
+  updateProgress();
+
+  if(currentIdx>=activeRoutine.tasks.length){
+    speak(msg,()=>setTimeout(showReward,600));
+  }else{
+    speak(msg,()=>{
+      document.getElementById(`card-${currentIdx}`).classList.add('active-card');
+      document.getElementById(`hint-${currentIdx}`).textContent='Current task ✨';
+      setTimeout(speakCurrentTask,500);
+    });
+  }
+}
+
+function answerNo(){
+  stopListen();
+  if(!activeRoutine||currentIdx>=activeRoutine.tasks.length)return;
+  const t=activeRoutine.tasks[currentIdx];
+  const nudges=getNudges(t.text);
+  const nudge=nudges[Math.floor(Math.random()*nudges.length)];
+  const full=`${nudge} Come back and say YES when you're done!`;
+  setBubble(nudge,'nudge');
+  speak(full,()=>{
+    setTimeout(()=>{
+      setBubble(`Go do it — I'll be listening for your YES! 🎤`,'');
+      startListen();
+    },800);
+  });
+}
+
+// ── Reward ────────────────────────────────────────────────
+function showReward(){
+  switchScreen('reward-screen');
+  document.getElementById('reward-title').textContent=`You did it, ${kidName}! 🎊`;
+  document.getElementById('reward-msg').textContent=`Every single task — done. You are an absolute superstar.`;
+  document.getElementById('reward-box').textContent=`🏆 ${activeRoutine?.reward||'Amazing work!'}`;
+  launchConfetti();
+  setTimeout(()=>{
+    speak(`Oh my goodness, ${kidName}! You finished every single task! That is absolutely incredible! Your reward is: ${activeRoutine?.reward||'well done'}! You are a superstar!`);
+  },400);
+}
+
+function launchConfetti(){
+  const cols=['#ff6b6b','#ffd93d','#6bcb77','#4d96ff','#c084fc','#fb923c'];
+  for(let i=0;i<70;i++){
+    setTimeout(()=>{
+      const el=document.createElement('div');
+      el.className='confetti-piece';
+      el.style.cssText=`left:${Math.random()*100}vw;background:${cols[~~(Math.random()*cols.length)]};--fd:${Math.random()*2+2}s;animation-delay:${Math.random()*.8}s;border-radius:${Math.random()>.5?'50%':'2px'};width:${Math.random()*8+5}px;height:${Math.random()*8+5}px;`;
+      document.body.appendChild(el);
+      setTimeout(()=>el.remove(),4000);
+    },i*35);
+  }
+}
+
+// ── Navigation ────────────────────────────────────────────
+function goHome(){
+  stopListen();
+  if('speechSynthesis' in window)speechSynthesis.cancel();
+  activeRoutine=null;currentIdx=0;
+  renderHome();
+  switchScreen('home-screen');
+}
+
+function switchScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+}
+
+function showSnack(msg){
+  const s=document.getElementById('snack');
+  s.textContent=msg;s.classList.add('show');
+  setTimeout(()=>s.classList.remove('show'),2800);
+}
+
+// ── Init ──────────────────────────────────────────────────
+loadData();
+renderHome();
+</script>
+</body>
+</html>
