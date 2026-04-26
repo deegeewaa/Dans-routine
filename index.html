@@ -1,0 +1,1457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Routinely ⭐</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&family=Baloo+2:wght@700;800&display=swap');
+
+/* ══ THEMES ══════════════════════════════════════════════ */
+/* SPACE — deep night sky, kept dark intentionally */
+:root{
+  --bg:#0d0a2e;--surface:#1a1650;--card:#231e6e;
+  --accent1:#ff6b6b;--accent2:#ffd93d;--accent3:#6bcb77;
+  --accent4:#4d96ff;--purple:#c084fc;--text:#f0edff;--muted:#9b97c0;
+  --btn-grad:linear-gradient(135deg,#4d96ff,#c084fc);
+  --logo-grad:linear-gradient(135deg,#4d96ff,#c084fc);
+  --glow:rgba(77,150,255,.3);
+  --text-on-card:#f0edff;
+}
+/* STEALTH — dark techy for teens */
+[data-theme="stealth"]{
+  --bg:#111318;--surface:#1c1f27;--card:#272b36;
+  --accent1:#ff4466;--accent2:#00ffcc;--accent3:#00dd88;
+  --accent4:#22aaff;--purple:#9944ff;--text:#e8eaf0;--muted:#6b7280;
+  --btn-grad:linear-gradient(135deg,#22aaff,#9944ff);
+  --logo-grad:linear-gradient(135deg,#00ffcc,#22aaff);
+  --glow:rgba(34,170,255,.25);
+  --text-on-card:#e8eaf0;
+}
+/* RAINBOW — light, bright, joyful */
+[data-theme="rainbow"]{
+  --bg:#fff0fb;--surface:#ffffff;--card:#f8e8ff;
+  --accent1:#e91e8c;--accent2:#ff6f00;--accent3:#00b050;
+  --accent4:#7b2fff;--purple:#e91e8c;--text:#2d0045;--muted:#9c6aaa;
+  --btn-grad:linear-gradient(135deg,#ff6f00,#e91e8c,#7b2fff);
+  --logo-grad:linear-gradient(135deg,#ff6f00,#e91e8c,#7b2fff);
+  --glow:rgba(123,47,255,.2);
+  --text-on-card:#2d0045;
+}
+/* SEASIDE — bright sky blue and sandy */
+[data-theme="seaside"]{
+  --bg:#e8f7ff;--surface:#ffffff;--card:#d0efff;
+  --accent1:#ff6b35;--accent2:#f59e0b;--accent3:#10b981;
+  --accent4:#0284c7;--purple:#7c3aed;--text:#0c2a3d;--muted:#5b8fa8;
+  --btn-grad:linear-gradient(135deg,#0284c7,#10b981);
+  --logo-grad:linear-gradient(135deg,#f59e0b,#0284c7);
+  --glow:rgba(2,132,199,.2);
+  --text-on-card:#0c2a3d;
+}
+/* FANTASY — warm parchment with magical purples */
+[data-theme="fantasy"]{
+  --bg:#fff8f0;--surface:#ffffff;--card:#fdeeff;
+  --accent1:#e91e8c;--accent2:#f59e0b;--accent3:#7c3aed;
+  --accent4:#a855f7;--purple:#e91e8c;--text:#2d0045;--muted:#9d6ab0;
+  --btn-grad:linear-gradient(135deg,#a855f7,#e91e8c);
+  --logo-grad:linear-gradient(135deg,#f59e0b,#a855f7,#e91e8c);
+  --glow:rgba(168,85,247,.25);
+  --text-on-card:#2d0045;
+}
+/* JUNGLE — bright tropical greens */
+[data-theme="jungle"]{
+  --bg:#f0fff4;--surface:#ffffff;--card:#dcfce7;
+  --accent1:#ea580c;--accent2:#ca8a04;--accent3:#16a34a;
+  --accent4:#15803d;--purple:#7c3aed;--text:#052e16;--muted:#6b8f72;
+  --btn-grad:linear-gradient(135deg,#16a34a,#ca8a04);
+  --logo-grad:linear-gradient(135deg,#ca8a04,#16a34a);
+  --glow:rgba(22,163,74,.2);
+  --text-on-card:#052e16;
+}
+/* SCI-FI — dark but with vivid neon pops */
+[data-theme="scifi"]{
+  --bg:#060818;--surface:#0d1433;--card:#131d45;
+  --accent1:#ff0055;--accent2:#00ffff;--accent3:#00ff88;
+  --accent4:#0099ff;--purple:#bb00ff;--text:#e0f0ff;--muted:#4466aa;
+  --btn-grad:linear-gradient(135deg,#0099ff,#bb00ff);
+  --logo-grad:linear-gradient(135deg,#00ffff,#0099ff);
+  --glow:rgba(0,153,255,.3);
+  --text-on-card:#e0f0ff;
+}
+
+/* ══ BASE ════════════════════════════════════════════════ */
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;transition:background .5s,color .4s}
+
+/* Animated bg particles */
+.stars{position:fixed;inset:0;z-index:-1;pointer-events:none}
+.star{position:absolute;border-radius:50%;background:white;animation:twinkle var(--dur,3s) infinite ease-in-out var(--delay,0s);opacity:0}
+@keyframes twinkle{0%,100%{opacity:0;transform:scale(1)}50%{opacity:var(--op,.8);transform:scale(1.4)}}
+
+/* Rainbow - soft pastel animated gradient */
+[data-theme="rainbow"] .stars{opacity:0}
+[data-theme="rainbow"] body::before{content:'';position:fixed;inset:0;background:linear-gradient(160deg,#ffe0f7,#e8f0ff,#f0fff8,#fff8e0);z-index:-1;animation:rainbow-shift 6s ease-in-out infinite alternate;pointer-events:none}
+@keyframes rainbow-shift{0%{filter:hue-rotate(0deg) brightness(1)}100%{filter:hue-rotate(30deg) brightness(1.05)}}
+
+/* Seaside - bright sky with subtle waves */
+[data-theme="seaside"] .stars{opacity:0}
+[data-theme="seaside"] body::before{content:'';position:fixed;inset:0;background:linear-gradient(180deg,#bae6fd 0%,#e0f7ff 40%,#f0fffe 100%);z-index:-1;pointer-events:none}
+[data-theme="seaside"] body::after{content:'';position:fixed;bottom:0;left:0;right:0;height:120px;background:linear-gradient(180deg,transparent,#0284c722);z-index:-1;animation:wave-gentle 4s ease-in-out infinite alternate;pointer-events:none}
+@keyframes wave-gentle{from{transform:scaleY(1)}to{transform:scaleY(1.08)}}
+
+/* Fantasy - warm parchment glow */
+[data-theme="fantasy"] .stars{opacity:0}
+[data-theme="fantasy"] body::before{content:'';position:fixed;inset:0;background:linear-gradient(160deg,#fce4ff,#fff8f0,#ffeeff);z-index:-1;animation:fantasy-pulse 5s ease-in-out infinite alternate;pointer-events:none}
+@keyframes fantasy-pulse{from{filter:brightness(1)}to{filter:brightness(1.05) saturate(1.1)}}
+
+/* Jungle - bright tropical */
+[data-theme="jungle"] .stars{opacity:0}
+[data-theme="jungle"] body::before{content:'';position:fixed;inset:0;background:linear-gradient(160deg,#d1fae5,#f0fff4,#ecfdf5);z-index:-1;pointer-events:none}
+
+/* Scifi grid - kept dark with neon grid */
+[data-theme="scifi"] body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,153,255,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(0,153,255,.08) 1px,transparent 1px);background-size:40px 40px;z-index:-1;pointer-events:none}
+
+.screen{display:none;position:relative;z-index:2}
+.screen.active{display:flex;flex-direction:column;align-items:center;min-height:100vh;padding:20px 16px;position:relative;z-index:2}
+
+/* ══ SHARED COMPONENTS ═══════════════════════════════════ */
+.logo{font-family:'Baloo 2',cursive;font-size:clamp(1.8rem,6vw,2.8rem);font-weight:800;background:var(--logo-grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-align:center;margin-bottom:4px}
+.logo-sub{color:var(--muted);font-size:.88rem;text-align:center;margin-bottom:22px}
+.card{background:var(--surface);border:2px solid var(--card);border-radius:20px;padding:18px;width:100%;max-width:500px;margin-bottom:14px;color:var(--text)}
+.card h2,.card h3{font-family:'Baloo 2',cursive;font-size:1rem;color:var(--accent2);margin-bottom:12px}
+.field-label{display:block;font-size:.78rem;color:var(--muted);margin-bottom:4px}
+.text-input{width:100%;padding:11px 14px;background:var(--card);border:2px solid transparent;border-radius:11px;color:var(--text);font-family:'Nunito',sans-serif;font-size:.95rem;font-weight:700;outline:none;transition:border-color .2s;margin-bottom:12px}
+.text-input:focus{border-color:var(--accent4)}
+.text-input::placeholder{color:var(--muted);font-weight:400}
+.btn-primary{width:100%;max-width:500px;padding:15px;background:var(--btn-grad);border:none;border-radius:15px;color:white;font-family:'Baloo 2',cursive;font-size:1.25rem;font-weight:800;cursor:pointer;transition:transform .15s,box-shadow .2s;box-shadow:0 6px 24px var(--glow);margin-bottom:10px}
+.btn-primary:hover{transform:translateY(-2px)}
+.btn-primary:active{transform:scale(.97)}
+.btn-secondary{background:var(--surface);border:2px solid var(--muted);border-radius:12px;color:var(--muted);font-family:'Nunito',sans-serif;font-size:.9rem;font-weight:700;padding:10px 20px;cursor:pointer;transition:all .2s}
+.btn-secondary:hover{color:var(--text);border-color:var(--text)}
+.btn-back{background:var(--card);border:none;border-radius:10px;color:var(--muted);font-size:1.2rem;width:38px;height:38px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:color .2s}
+.btn-back:hover{color:var(--text)}
+.voice-row{display:flex;gap:8px;flex-wrap:wrap}
+.voice-opt{flex:1;min-width:80px}
+.voice-opt label{display:block;background:var(--card);border:2px solid transparent;border-radius:10px;padding:9px 8px;cursor:pointer;text-align:center;transition:all .2s;color:var(--text);font-weight:700;font-size:.78rem}
+.voice-opt input{display:none}
+.voice-opt input:checked+label{border-color:var(--accent4);background:rgba(77,150,255,.15);color:var(--accent4)}
+
+/* Drag list */
+.drag-list{list-style:none;margin-bottom:12px}
+.drag-item{display:flex;align-items:center;gap:9px;background:var(--card);border:2px solid transparent;border-radius:11px;padding:10px 12px;margin-bottom:7px;user-select:none;touch-action:none;transition:all .2s;color:var(--text)}
+.drag-item.dragging{opacity:.4;border-color:var(--accent4)}
+.drag-item.drag-over{border-color:var(--accent2);transform:scale(1.01)}
+.drag-handle{color:var(--muted);font-size:.95rem;cursor:grab;flex-shrink:0;touch-action:none}
+.drag-emoji{font-size:1.1rem;flex-shrink:0}
+.drag-text{flex:1;font-weight:700;font-size:.84rem;line-height:1.3}
+.drag-timer{font-size:.72rem;color:var(--accent4);font-weight:700;white-space:nowrap;flex-shrink:0}
+.drag-del{background:none;border:none;color:var(--accent1);cursor:pointer;font-size:.95rem;opacity:.5;transition:opacity .2s;padding:0 3px;flex-shrink:0}
+.drag-del:hover{opacity:1}
+.add-row{display:flex;gap:7px;align-items:center;flex-wrap:wrap}
+.emoji-sel{background:var(--card);border:2px solid transparent;border-radius:10px;color:var(--text);font-size:1.1rem;padding:9px;cursor:pointer;outline:none;flex-shrink:0}
+.add-input{flex:1;min-width:100px;padding:10px 12px;background:var(--card);border:2px solid transparent;border-radius:10px;color:var(--text);font-family:'Nunito',sans-serif;font-size:.86rem;font-weight:700;outline:none;transition:border-color .2s;margin-bottom:0!important}
+.add-input:focus{border-color:var(--accent4)}
+.add-input::placeholder{color:var(--muted);font-weight:400}
+.timer-input{width:64px;padding:10px 6px;background:var(--card);border:2px solid transparent;border-radius:10px;color:var(--accent4);font-family:'Nunito',sans-serif;font-size:.86rem;font-weight:700;outline:none;text-align:center;margin-bottom:0!important}
+.timer-input:focus{border-color:var(--accent4)}
+.btn-add{background:var(--accent4);border:none;border-radius:10px;color:white;font-size:1.2rem;width:38px;height:38px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:transform .15s}
+.btn-add:hover{transform:scale(1.1)}
+.add-hint{width:100%;font-size:.72rem;color:var(--muted);margin-top:5px}
+
+/* ══ HOME ════════════════════════════════════════════════ */
+#home-screen{justify-content:flex-start;padding-top:26px}
+
+/* Avatar display */
+.home-avatar{font-size:4rem;text-align:center;margin-bottom:6px;animation:float 3s ease-in-out infinite alternate}
+@keyframes float{from{transform:translateY(0)}to{transform:translateY(-8px)}}
+.home-name{font-family:'Baloo 2',cursive;font-size:1.3rem;color:var(--accent2);text-align:center;margin-bottom:20px}
+
+.top-bar{width:100%;max-width:500px;display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.section-title{font-family:'Baloo 2',cursive;font-size:1rem;color:var(--accent2)}
+.top-bar-btns{display:flex;gap:7px}
+.btn-sm{background:var(--card);border:none;border-radius:9px;color:var(--muted);font-family:'Nunito',sans-serif;font-size:.78rem;font-weight:800;padding:7px 11px;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:4px}
+.btn-sm:hover{color:var(--text)}
+.btn-sm.primary{background:var(--accent4);color:white}
+.btn-sm.primary:hover{transform:scale(1.05)}
+
+.routine-card{background:var(--surface);border:2px solid var(--card);border-radius:15px;padding:14px 15px;margin-bottom:11px;width:100%;max-width:500px;color:var(--text)}
+.routine-card-header{display:flex;align-items:center;gap:11px}
+.routine-icon{font-size:1.6rem;flex-shrink:0}
+.routine-info{flex:1;min-width:0}
+.routine-name{font-family:'Baloo 2',cursive;font-size:.98rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.routine-meta{font-size:.7rem;color:var(--muted);margin-top:1px}
+.routine-actions{display:flex;gap:5px;align-items:center}
+.btn-icon-sm{background:var(--card);border:none;border-radius:7px;color:var(--muted);font-size:.88rem;width:30px;height:30px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0}
+.btn-icon-sm:hover{color:var(--text)}
+.btn-icon-sm.danger:hover{color:var(--accent1)}
+.btn-launch{background:var(--btn-grad);border:none;border-radius:9px;color:white;font-family:'Baloo 2',cursive;font-size:.88rem;font-weight:700;padding:7px 13px;cursor:pointer;transition:transform .15s;white-space:nowrap;box-shadow:0 3px 12px var(--glow)}
+.btn-launch:hover{transform:scale(1.05)}
+
+/* ══ AVATAR PICKER ═══════════════════════════════════════ */
+#avatar-screen{justify-content:flex-start;padding-top:24px}
+.avatar-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;width:100%;max-width:500px;margin-bottom:16px}
+.avatar-opt{background:var(--card);border:3px solid transparent;border-radius:14px;padding:14px 8px;cursor:pointer;text-align:center;transition:all .2s;font-size:2.2rem}
+.avatar-opt:hover{border-color:var(--muted);transform:scale(1.05)}
+.avatar-opt.selected{border-color:var(--accent2);background:rgba(255,217,61,.1);transform:scale(1.08)}
+.avatar-name{font-size:.65rem;color:var(--muted);font-weight:700;margin-top:4px}
+
+/* ══ PIN ═════════════════════════════════════════════════ */
+#pin-screen{justify-content:center;text-align:center}
+.pin-title{font-family:'Baloo 2',cursive;font-size:1.4rem;color:var(--accent2);margin-bottom:6px}
+.pin-sub{color:var(--muted);font-size:.85rem;margin-bottom:26px}
+.pin-dots{display:flex;gap:14px;justify-content:center;margin-bottom:26px}
+.pin-dot{width:17px;height:17px;border-radius:50%;border:3px solid var(--muted);transition:all .2s}
+.pin-dot.filled{background:var(--accent4);border-color:var(--accent4)}
+.pin-dot.error{background:var(--accent1);border-color:var(--accent1);animation:shake .3s ease}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.pin-pad{display:grid;grid-template-columns:repeat(3,1fr);gap:11px;max-width:270px;margin:0 auto 18px}
+.pin-key{background:var(--surface);border:2px solid var(--card);border-radius:13px;color:var(--text);font-family:'Baloo 2',cursive;font-size:1.4rem;font-weight:800;padding:15px;cursor:pointer;transition:all .15s;user-select:none}
+.pin-key:active{transform:scale(.91);background:var(--card)}
+.pin-cancel{color:var(--muted);font-size:.85rem;font-weight:700;cursor:pointer;background:none;border:none;margin-top:4px}
+
+/* ══ SETTINGS ════════════════════════════════════════════ */
+#settings-screen{justify-content:flex-start;padding-top:22px}
+.settings-header{width:100%;max-width:500px;display:flex;align-items:center;gap:11px;margin-bottom:18px}
+.settings-title{font-family:'Baloo 2',cursive;font-size:1.2rem;font-weight:800;color:var(--accent2)}
+.age-toggle{display:flex;gap:0;background:var(--card);border-radius:11px;padding:4px}
+.age-btn{flex:1;padding:9px 6px;border:none;border-radius:8px;background:none;color:var(--muted);font-family:'Nunito',sans-serif;font-size:.82rem;font-weight:800;cursor:pointer;transition:all .2s;text-align:center;line-height:1.3}
+.age-btn.active{background:var(--accent4);color:white}
+.theme-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.theme-card{border-radius:13px;padding:13px;cursor:pointer;border:3px solid rgba(0,0,0,.12);transition:all .2s;position:relative;overflow:hidden;background:rgba(0,0,0,.05)}
+.theme-card:hover{transform:scale(1.02)}
+.theme-card.selected{border-color:var(--accent2);box-shadow:0 0 0 2px var(--accent2)22}
+.theme-preview{width:100%;height:44px;border-radius:8px;margin-bottom:7px}
+.theme-name{font-family:'Baloo 2',cursive;font-size:.88rem;font-weight:700}
+.theme-desc{font-size:.68rem;color:var(--muted);margin-top:1px}
+.pin-change-row{display:flex;gap:9px;align-items:flex-end}
+.pin-change-input{flex:1;padding:11px 12px;background:var(--card);border:2px solid transparent;border-radius:11px;color:var(--text);font-family:'Nunito',sans-serif;font-size:1.1rem;font-weight:800;outline:none;letter-spacing:8px;text-align:center;transition:border-color .2s;margin-bottom:0!important}
+.pin-change-input:focus{border-color:var(--accent4)}
+.btn-set-pin{background:var(--accent4);border:none;border-radius:10px;color:white;font-family:'Nunito',sans-serif;font-size:.85rem;font-weight:800;padding:12px 14px;cursor:pointer;white-space:nowrap}
+
+/* ══ AI GENERATOR ════════════════════════════════════════ */
+#ai-screen{justify-content:flex-start;padding-top:22px}
+.ai-header{width:100%;max-width:500px;display:flex;align-items:center;gap:11px;margin-bottom:18px}
+.ai-title{font-family:'Baloo 2',cursive;font-size:1.2rem;font-weight:800;color:var(--accent2)}
+.ai-who-row{display:flex;gap:8px;margin-bottom:4px}
+.ai-who-btn{flex:1;padding:10px;background:var(--card);border:2px solid transparent;border-radius:11px;color:var(--muted);font-family:'Nunito',sans-serif;font-size:.84rem;font-weight:800;cursor:pointer;transition:all .2s;text-align:center}
+.ai-who-btn.active{border-color:var(--accent4);color:var(--accent4);background:rgba(77,150,255,.1)}
+.ai-result{background:var(--card);border-radius:14px;padding:14px;margin-top:12px;display:none}
+.ai-result.show{display:block}
+.ai-task-preview{display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--surface);border-radius:9px;margin-bottom:7px;font-size:.86rem;font-weight:700}
+.ai-task-preview .t-mins{font-size:.72rem;color:var(--accent4);margin-left:auto;white-space:nowrap}
+.ai-loading{text-align:center;padding:20px;color:var(--muted);font-family:'Baloo 2',cursive;font-size:1rem}
+.ai-loading .spinner{font-size:2rem;animation:spin 1s linear infinite;display:block;margin-bottom:10px}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ══ EDIT ROUTINE ════════════════════════════════════════ */
+#edit-screen{justify-content:flex-start;padding-top:22px}
+.edit-header{width:100%;max-width:500px;display:flex;align-items:center;gap:11px;margin-bottom:18px}
+.edit-title{font-family:'Baloo 2',cursive;font-size:1.2rem;font-weight:800;color:var(--accent2)}
+.routine-meta-row{display:flex;gap:9px;margin-bottom:12px}
+.emoji-pick{background:var(--card);border:2px solid transparent;border-radius:11px;color:var(--text);font-size:1.2rem;padding:10px 11px;cursor:pointer;outline:none;flex-shrink:0}
+
+/* ══ MISSION ════════════════════════════════════════════ */
+#mission-screen{justify-content:flex-start;padding-top:14px}
+.mission-avatar{font-size:2.8rem;text-align:center;margin-bottom:4px;animation:float 3s ease-in-out infinite alternate}
+.mission-header{text-align:center;margin-bottom:12px;width:100%}
+.mission-title{font-family:'Baloo 2',cursive;font-size:clamp(1.2rem,4.5vw,1.9rem);font-weight:800;color:var(--accent2)}
+.mission-sub{color:var(--muted);font-size:.78rem;margin-top:2px}
+.progress-wrap{width:100%;max-width:500px;background:var(--card);border-radius:999px;height:10px;margin:0 auto 14px;overflow:hidden}
+.progress-bar{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--accent3),var(--accent2));transition:width .6s cubic-bezier(.68,-.55,.27,1.55);width:0%}
+.task-cards{width:100%;max-width:500px;display:flex;flex-direction:column;gap:7px;margin-bottom:12px}
+.task-card{background:var(--surface);border:3px solid var(--card);border-radius:13px;padding:11px 14px;display:flex;align-items:center;gap:11px;transition:all .3s ease;position:relative;overflow:hidden;color:var(--text)}
+.task-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,var(--accent3),#2dd4bf);opacity:0;transition:opacity .3s}
+.task-card.done{border-color:var(--accent3)}.task-card.done::before{opacity:.1}
+.task-card.active-card{border-color:var(--accent4);animation:pulse-card 2s ease-in-out infinite}
+@keyframes pulse-card{0%,100%{box-shadow:0 0 0 3px rgba(77,150,255,.2)}50%{box-shadow:0 0 0 7px rgba(77,150,255,.05)}}
+.task-card-emoji{font-size:1.7rem;position:relative;z-index:1;flex-shrink:0;transition:transform .3s}
+.task-card.done .task-card-emoji{transform:scale(1.2) rotate(12deg)}
+.task-card-body{flex:1;position:relative;z-index:1;min-width:0}
+.task-card-name{font-family:'Baloo 2',cursive;font-size:.9rem;font-weight:700;line-height:1.2}
+.task-card-hint{font-size:.68rem;color:var(--muted);margin-top:2px}
+.task-card.done .task-card-name{text-decoration:line-through;opacity:.5}
+.task-check{width:28px;height:28px;border-radius:50%;border:3px solid var(--card);display:flex;align-items:center;justify-content:center;font-size:.8rem;position:relative;z-index:1;flex-shrink:0;background:var(--card);transition:all .3s cubic-bezier(.68,-.55,.27,1.55)}
+.task-card.done .task-check{background:var(--accent3);border-color:var(--accent3);transform:scale(1.15)}
+.timer-ring-wrap{position:relative;z-index:1;flex-shrink:0;width:42px;height:42px;display:flex;align-items:center;justify-content:center}
+.task-card.active-card .task-check{display:none}
+.task-card:not(.active-card) .timer-ring-wrap{opacity:.35}
+.timer-ring-wrap svg{position:absolute;top:0;left:0;transform:rotate(-90deg)}
+.timer-ring-bg{fill:none;stroke:var(--card);stroke-width:4}
+.timer-ring-fg{fill:none;stroke:var(--accent2);stroke-width:4;stroke-linecap:round;transition:stroke-dashoffset .9s linear,stroke .3s}
+.timer-text{font-family:'Baloo 2',cursive;font-size:.68rem;font-weight:800;color:var(--accent2);z-index:1;line-height:1}
+.timer-ring-wrap.urgent .timer-ring-fg{stroke:var(--accent1)}
+.timer-ring-wrap.urgent .timer-text{color:var(--accent1)}
+.snooze-banner{width:100%;max-width:500px;background:rgba(255,107,107,.1);border:2px solid var(--accent1);border-radius:11px;padding:9px 14px;display:none;align-items:center;justify-content:space-between;margin-bottom:9px;gap:9px}
+.snooze-banner.show{display:flex}
+.snooze-text{font-size:.82rem;color:var(--accent1);font-weight:700}
+.btn-snooze{background:var(--accent1);border:none;border-radius:8px;color:white;font-family:'Baloo 2',cursive;font-size:.85rem;font-weight:800;padding:7px 13px;cursor:pointer;white-space:nowrap}
+.voice-bubble{width:100%;max-width:500px;border-radius:13px;padding:12px 16px;font-family:'Baloo 2',cursive;font-size:.92rem;margin-bottom:11px;min-height:52px;display:flex;align-items:center;justify-content:center;text-align:center;line-height:1.5;transition:all .35s ease;border:2px solid var(--accent4);background:var(--surface);color:var(--accent4);box-shadow:0 2px 12px var(--glow)}
+.voice-bubble.nudge{border-color:var(--accent1);background:rgba(255,107,107,.08);color:var(--accent1);animation:nudge-shake .4s ease}
+@keyframes nudge-shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.voice-bubble.praise{border-color:var(--accent3);background:rgba(107,203,119,.08);color:var(--accent3)}
+.mic-zone{width:100%;max-width:500px;display:flex;flex-direction:column;align-items:center;gap:7px;margin-bottom:10px}
+.mic-btn{width:74px;height:74px;border-radius:50%;background:var(--btn-grad);border:none;font-size:1.9rem;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 24px var(--glow);transition:transform .15s}
+.mic-btn:active{transform:scale(.94)}
+.mic-btn.listening{animation:mic-pulse 1.2s ease-in-out infinite;background:linear-gradient(135deg,var(--accent1),#ff8e53);box-shadow:0 8px 30px rgba(255,107,107,.5)}
+@keyframes mic-pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+.mic-label{font-size:.76rem;color:var(--muted);font-weight:700;text-align:center}
+.listen-dots{display:none;gap:5px;align-items:center}
+.listen-dots.active{display:flex}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--accent1);animation:dotbounce .8s ease-in-out infinite}
+.dot:nth-child(2){animation-delay:.15s}.dot:nth-child(3){animation-delay:.3s}
+@keyframes dotbounce{0%,100%{transform:translateY(0);opacity:.4}50%{transform:translateY(-5px);opacity:1}}
+.tap-buttons{width:100%;max-width:500px;display:flex;gap:9px;margin-bottom:7px}
+.btn-yes,.btn-no{flex:1;padding:12px;border:none;border-radius:12px;font-family:'Baloo 2',cursive;font-size:1.15rem;font-weight:800;cursor:pointer;transition:transform .15s;display:flex;align-items:center;justify-content:center;gap:5px}
+.btn-yes{background:linear-gradient(135deg,var(--accent3),#2dd4bf);color:#052e16;box-shadow:0 4px 14px rgba(107,203,119,.3)}
+.btn-no{background:linear-gradient(135deg,var(--accent1),#ff8e53);color:white;box-shadow:0 4px 14px rgba(255,107,107,.3)}
+.btn-yes:active,.btn-no:active{transform:scale(.96)}
+.btn-quit{background:none;border:2px solid var(--card);border-radius:9px;color:var(--muted);font-size:.76rem;font-weight:700;padding:6px 14px;cursor:pointer;transition:all .2s}
+/* Big DONE button */
+.btn-done{width:100%;max-width:500px;padding:22px;background:linear-gradient(135deg,var(--accent3),#2dd4bf);border:none;border-radius:20px;color:#052e16;font-family:'Baloo 2',cursive;font-size:2rem;font-weight:800;cursor:pointer;margin-bottom:12px;box-shadow:0 8px 30px rgba(107,203,119,.4);transition:transform .15s,box-shadow .2s;animation:done-pulse 2s ease-in-out infinite}
+.btn-done:active{transform:scale(.95)}
+@keyframes done-pulse{0%,100%{box-shadow:0 8px 30px rgba(107,203,119,.4)}50%{box-shadow:0 8px 50px rgba(107,203,119,.6);transform:scale(1.02)}}
+/* Need more time button */
+.btn-more-time{width:100%;max-width:500px;padding:13px;background:none;border:2px solid var(--accent2);border-radius:13px;color:var(--accent2);font-family:'Baloo 2',cursive;font-size:1rem;font-weight:800;cursor:pointer;margin-bottom:12px;transition:all .2s}
+.btn-more-time:active{transform:scale(.97)}
+/* Timer expired question zone */
+.expired-zone{width:100%;max-width:500px;margin-bottom:10px}
+.expired-label{font-family:'Baloo 2',cursive;font-size:1.1rem;color:var(--accent1);text-align:center;margin-bottom:10px;padding:10px;background:rgba(255,107,107,.1);border-radius:12px;border:2px solid var(--accent1)}
+
+/* ══ REWARD ══════════════════════════════════════════════ */
+#reward-screen{justify-content:center;text-align:center}
+.firework-emoji{font-size:5rem;animation:bounce .6s ease infinite alternate;display:block;margin-bottom:12px}
+@keyframes bounce{from{transform:translateY(0) scale(1)}to{transform:translateY(-16px) scale(1.1)}}
+.reward-avatar{font-size:3rem;margin-bottom:8px;display:block;animation:spin-slow 4s linear infinite}
+@keyframes spin-slow{from{transform:rotate(-5deg)}to{transform:rotate(5deg)}}
+.reward-title{font-family:'Baloo 2',cursive;font-size:clamp(1.8rem,6vw,2.8rem);font-weight:800;background:linear-gradient(135deg,var(--accent2),var(--accent1));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:6px}
+.reward-msg{font-size:.95rem;color:var(--muted);margin-bottom:18px;max-width:340px}
+.reward-box{background:var(--surface);border:3px solid var(--accent2);border-radius:17px;padding:18px 24px;font-family:'Baloo 2',cursive;font-size:1.15rem;color:var(--accent2);margin-bottom:22px;max-width:400px;box-shadow:0 8px 30px rgba(255,217,61,.18)}
+.confetti-piece{position:fixed;border-radius:2px;animation:fall var(--fd) linear forwards;top:-20px;z-index:999}
+@keyframes fall{to{transform:translateY(110vh) rotate(720deg);opacity:0}}
+
+/* ══ MODALS ══════════════════════════════════════════════ */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:300;align-items:center;justify-content:center;padding:20px}
+.modal-overlay.show{display:flex}
+.modal{background:var(--surface);border:2px solid var(--accent4);border-radius:20px;padding:22px 20px;max-width:380px;width:100%;text-align:center}
+.modal-icon{font-size:2.6rem;margin-bottom:9px;display:block}
+.modal-title{font-family:'Baloo 2',cursive;font-size:1.3rem;color:var(--accent4);margin-bottom:7px}
+.modal-body{color:var(--muted);font-size:.85rem;line-height:1.6;margin-bottom:14px}
+.modal-body strong{color:var(--text)}
+.modal-steps{text-align:left;background:var(--card);border-radius:11px;padding:12px 14px;margin-bottom:14px}
+.modal-steps li{color:var(--text);font-size:.82rem;margin-bottom:6px;padding-left:4px}
+.modal-steps li:last-child{margin-bottom:0}
+.btn-modal{width:100%;padding:12px;background:var(--btn-grad);border:none;border-radius:12px;color:white;font-family:'Baloo 2',cursive;font-size:1rem;font-weight:800;cursor:pointer}
+.snack{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--card);border:2px solid var(--accent4);border-radius:11px;padding:10px 18px;font-weight:700;color:var(--accent4);font-size:.85rem;z-index:400;transition:transform .3s cubic-bezier(.68,-.55,.27,1.55);white-space:nowrap;max-width:90vw;text-align:center}
+.snack.show{transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+<div class="stars" id="stars"></div>
+<div class="snack" id="snack"></div>
+
+<!-- Mic modal -->
+<div class="modal-overlay" id="mic-modal">
+  <div class="modal">
+    <span class="modal-icon">🎤</span>
+    <div class="modal-title">Microphone Permission</div>
+    <p class="modal-body">The app needs your microphone to hear answers. Here's how to allow it:</p>
+    <ol class="modal-steps" id="mic-steps">
+      <li>Tap the <strong>🔒 lock icon</strong> in the address bar</li>
+      <li>Tap <strong>Permissions → Microphone → Allow</strong></li>
+      <li>Refresh the page and try again</li>
+    </ol>
+    <button class="btn-modal" onclick="closeMicModal()">Got it, let's try again! 👍</button>
+  </div>
+</div>
+
+<!-- ══ HOME ══ -->
+<div class="screen active" id="home-screen">
+  <div class="logo" id="app-logo">⭐ Routinely</div>
+  <p class="logo-sub">Your daily mission hub</p>
+  <div class="home-avatar" id="home-avatar">⭐</div>
+  <div class="home-name" id="home-name">Who's the superstar?</div>
+  <div class="card" style="margin-bottom:10px">
+    <input class="text-input" id="kid-name" placeholder="Enter name here..." maxlength="20" oninput="saveName()" style="margin-bottom:0">
+  </div>
+  <div style="width:100%;max-width:500px;margin-bottom:14px">
+    <div class="field-label" style="margin-bottom:6px;font-size:.82rem">👶 Who is this for?</div>
+    <div class="age-toggle" id="home-age-toggle">
+      <button class="age-btn" id="home-age-young" onclick="setAgeGroup('young')">⭐ Little Stars<br><span style="font-size:.68rem;font-weight:400">Under 10s</span></button>
+      <button class="age-btn" id="home-age-teen" onclick="setAgeGroup('teen')">🎯 Older Kids<br><span style="font-size:.68rem;font-weight:400">10s &amp; teens</span></button>
+    </div>
+  </div>
+  <div class="top-bar">
+    <span class="section-title">📋 Routines</span>
+    <div class="top-bar-btns">
+      <button class="btn-sm" onclick="switchScreen('avatar-screen')">🧑 Avatar</button>
+      <button class="btn-sm" onclick="goToPin('settings')">🔒 Settings</button>
+      <button class="btn-sm" onclick="goToPin('ai')">✨ AI Create</button>
+      <button class="btn-sm primary" onclick="goToPin('new-routine')">＋ New</button>
+    </div>
+  </div>
+  <div id="routine-list" style="width:100%;max-width:500px"></div>
+</div>
+
+<!-- ══ AVATAR PICKER ══ -->
+<div class="screen" id="avatar-screen">
+  <div class="edit-header">
+    <button class="btn-back" onclick="goHome()">←</button>
+    <div class="edit-title" style="color:var(--accent2);font-family:'Baloo 2',cursive;font-size:1.2rem;font-weight:800">Choose Your Avatar</div>
+  </div>
+  <div class="avatar-grid" id="avatar-grid"></div>
+  <button class="btn-primary" onclick="saveAvatar()">✅ Save Avatar</button>
+</div>
+
+<!-- ══ PIN ══ -->
+<div class="screen" id="pin-screen">
+  <div style="height:50px"></div>
+  <div class="pin-title">🔒 Parent Access</div>
+  <p class="pin-sub" id="pin-sub">Enter your 4-digit PIN</p>
+  <div class="pin-dots" id="pin-dots">
+    <div class="pin-dot" id="pd0"></div><div class="pin-dot" id="pd1"></div>
+    <div class="pin-dot" id="pd2"></div><div class="pin-dot" id="pd3"></div>
+  </div>
+  <div class="pin-pad">
+    <button class="pin-key" onclick="pinKey('1')">1</button>
+    <button class="pin-key" onclick="pinKey('2')">2</button>
+    <button class="pin-key" onclick="pinKey('3')">3</button>
+    <button class="pin-key" onclick="pinKey('4')">4</button>
+    <button class="pin-key" onclick="pinKey('5')">5</button>
+    <button class="pin-key" onclick="pinKey('6')">6</button>
+    <button class="pin-key" onclick="pinKey('7')">7</button>
+    <button class="pin-key" onclick="pinKey('8')">8</button>
+    <button class="pin-key" onclick="pinKey('9')">9</button>
+    <button class="pin-key" onclick="pinKey('del')" style="font-size:1rem">⌫</button>
+    <button class="pin-key" onclick="pinKey('0')">0</button>
+    <button class="pin-key" onclick="pinKey('del')" style="font-size:.75rem;color:var(--muted)">CLR</button>
+  </div>
+  <button class="pin-cancel" onclick="goHome()">Cancel</button>
+</div>
+
+<!-- ══ SETTINGS ══ -->
+<div class="screen" id="settings-screen">
+  <div class="settings-header">
+    <button class="btn-back" onclick="goHome()">←</button>
+    <div class="settings-title">⚙️ Parent Settings</div>
+  </div>
+  <div class="card">
+    <h3>👶 Age Group</h3>
+    <p style="font-size:.78rem;color:var(--muted);margin-bottom:10px">Changes the language and nudge style throughout the app</p>
+    <div class="age-toggle">
+      <button class="age-btn" id="age-young" onclick="setAgeGroup('young')">⭐ Little Stars<br><span style="font-size:.68rem;font-weight:400">Under 10s</span></button>
+      <button class="age-btn" id="age-teen" onclick="setAgeGroup('teen')">🎯 Older Kids<br><span style="font-size:.68rem;font-weight:400">10s &amp; teens</span></button>
+    </div>
+  </div>
+  <div class="card">
+    <h3>🎨 Theme</h3>
+    <div class="theme-grid" id="theme-grid"></div>
+  </div>
+  <div class="card">
+    <h3>🔒 Change PIN</h3>
+    <div class="pin-change-row">
+      <input class="pin-change-input" id="new-pin-input" type="password" inputmode="numeric" maxlength="4" placeholder="••••">
+      <button class="btn-set-pin" onclick="changePin()">Set PIN</button>
+    </div>
+  </div>
+  <button class="btn-primary" onclick="goHome()">✅ Done</button>
+</div>
+
+<!-- ══ AI GENERATOR ══ -->
+<div class="screen" id="ai-screen">
+  <div class="ai-header">
+    <button class="btn-back" onclick="goHome()">←</button>
+    <div class="ai-title">✨ AI Routine Builder</div>
+  </div>
+  <div class="card">
+    <h3>Who is this routine for?</h3>
+    <div class="ai-who-row">
+      <button class="ai-who-btn active" id="who-child" onclick="setWho('child')">👶 My child</button>
+      <button class="ai-who-btn" id="who-teen" onclick="setWho('teen')">🎯 Older child / teen</button>
+      <button class="ai-who-btn" id="who-me" onclick="setWho('me')">🙋 Me (parent)</button>
+    </div>
+  </div>
+  <div class="card">
+    <h3>What do they need help with?</h3>
+    <p style="font-size:.78rem;color:var(--muted);margin-bottom:10px">Be specific — the more detail, the better the routine!</p>
+    <textarea class="text-input" id="ai-goal" rows="3" placeholder="e.g. Write a story about the Titanic for school. He needs to research, plan and write it." style="resize:none;height:90px;margin-bottom:8px"></textarea>
+    <span class="field-label">Routine name (optional)</span>
+    <input class="text-input" id="ai-routine-name" placeholder="e.g. Titanic Story Project" maxlength="30" style="margin-bottom:0">
+  </div>
+  <button class="btn-primary" onclick="generateAIRoutine()">✨ Generate Routine</button>
+  <div class="card ai-result" id="ai-result">
+    <div id="ai-result-inner"></div>
+    <button class="btn-primary" id="ai-save-btn" onclick="saveAIRoutine()" style="margin-top:10px;margin-bottom:0;display:none">💾 Save this Routine</button>
+  </div>
+</div>
+
+<!-- ══ EDIT ROUTINE ══ -->
+<div class="screen" id="edit-screen">
+  <div class="edit-header">
+    <button class="btn-back" onclick="goHome()">←</button>
+    <div class="edit-title" id="edit-title">New Routine</div>
+  </div>
+  <div class="card">
+    <h3>Name &amp; icon</h3>
+    <div class="routine-meta-row">
+      <select class="emoji-pick" id="edit-emoji">
+        <option>🌅</option><option>🌙</option><option>🏫</option><option>⚽</option>
+        <option>🎮</option><option>🍽️</option><option>🛁</option><option>🌟</option>
+        <option>🏋️</option><option>🎒</option><option>📝</option><option>🎨</option>
+      </select>
+      <input class="text-input" id="edit-name" placeholder="e.g. Morning Routine" maxlength="30" style="margin-bottom:0">
+    </div>
+  </div>
+  <div class="card">
+    <h3>Reward 🏆</h3>
+    <input class="text-input" id="edit-reward" placeholder="e.g. 30 minutes of Minecraft!" maxlength="80" style="margin-bottom:0">
+  </div>
+  <div class="card">
+    <h3>🎙️ Voice style</h3>
+    <div class="voice-row">
+      <div class="voice-opt"><input type="radio" name="vt" id="v-friendly" value="friendly" checked><label for="v-friendly">😊 Friendly</label></div>
+      <div class="voice-opt"><input type="radio" name="vt" id="v-robot" value="robot"><label for="v-robot">🤖 Robot</label></div>
+      <div class="voice-opt"><input type="radio" name="vt" id="v-slow" value="slow"><label for="v-slow">🐢 Slow &amp; Clear</label></div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>📋 Tasks — drag to reorder</h3>
+    <ul class="drag-list" id="drag-list"></ul>
+    <div class="add-row">
+      <select class="emoji-sel" id="task-emoji">
+        <option>🦷</option><option>🛁</option><option>👕</option><option>🧦</option>
+        <option>🍳</option><option>🎒</option><option>💊</option><option>🥛</option>
+        <option>📚</option><option>🛏️</option><option>🚿</option><option>🧴</option>
+        <option>👟</option><option>🥣</option><option>🧹</option><option>😴</option>
+        <option>📖</option><option>🧸</option><option>🌙</option><option>💡</option>
+        <option>📝</option><option>🔍</option><option>💻</option><option>🎨</option>
+      </select>
+      <input class="add-input" id="new-task-input" placeholder="Task name..." maxlength="40">
+      <input class="timer-input" id="new-task-timer" type="number" min="1" max="60" placeholder="mins">
+      <button class="btn-add" onclick="addTaskToEdit()">＋</button>
+    </div>
+    <p class="add-hint">⏱ Minutes is optional — leave blank for no timer</p>
+  </div>
+  <button class="btn-primary" onclick="saveRoutine()">💾 Save Routine</button>
+</div>
+
+<!-- ══ MISSION ══ -->
+<div class="screen" id="mission-screen">
+  <div class="mission-avatar" id="mission-avatar">⭐</div>
+  <div class="mission-header">
+    <div class="mission-title" id="mission-title">Mission</div>
+    <div class="mission-sub">Complete every task to unlock your reward!</div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="progress-bar"></div></div>
+  <div class="task-cards" id="task-cards"></div>
+  <div class="voice-bubble" id="voice-bubble">Get ready...</div>
+  <!-- Big DONE button — shown while task is running -->
+  <button class="btn-done" id="btn-done" onclick="answerYes()" style="display:none">
+    ✅ DONE!
+  </button>
+  <!-- Need more time — shown while task is running -->
+  <button class="btn-more-time" id="btn-more-time" onclick="needMoreTime()" style="display:none">
+    ⏳ I need more time
+  </button>
+  <!-- Timer expired — question mode -->
+  <div class="expired-zone" id="expired-zone" style="display:none">
+    <div class="expired-label" id="expired-label">Have you done it yet?</div>
+    <div class="tap-buttons">
+      <button class="btn-yes" onclick="answerYes()">✅ Yes, done!</button>
+      <button class="btn-no" onclick="answerNo()">🔄 Not yet</button>
+    </div>
+  </div>
+  <!-- Always visible fallback tap buttons -->
+  <div class="tap-buttons" style="margin-top:4px">
+    <button class="btn-yes" onclick="answerYes()" style="opacity:.7;font-size:.95rem;padding:9px">✅ Done</button>
+    <button class="btn-no" onclick="answerNo()" style="opacity:.7;font-size:.95rem;padding:9px">🔄 Not yet</button>
+  </div>
+  <div class="mic-zone">
+    <button class="mic-btn" id="mic-btn" onclick="toggleListen()">🎤</button>
+    <div class="listen-dots" id="listen-dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+    <div class="mic-label" id="mic-label">Say DONE when you've finished!</div>
+  </div>
+  <button class="btn-quit" onclick="goHome()">✕ Quit</button>
+</div>
+
+<!-- ══ REWARD ══ -->
+<div class="screen" id="reward-screen">
+  <span class="firework-emoji">🎉</span>
+  <span class="reward-avatar" id="reward-avatar">⭐</span>
+  <div class="reward-title" id="reward-title">You did it!</div>
+  <p class="reward-msg" id="reward-msg">Every task — done. Absolute legend.</p>
+  <div class="reward-box" id="reward-box">🏆 Your reward...</div>
+  <button class="btn-secondary" onclick="goHome()">↩ Back to routines</button>
+</div>
+
+<script>
+// ── Stars ─────────────────────────────────────────────────
+(function(){
+  const c=document.getElementById('stars');
+  for(let i=0;i<90;i++){
+    const s=document.createElement('div');s.className='star';
+    const sz=Math.random()*2.5+.5;
+    s.style.cssText=`width:${sz}px;height:${sz}px;left:${Math.random()*100}%;top:${Math.random()*100}%;--dur:${Math.random()*4+2}s;--delay:${Math.random()*5}s;--op:${Math.random()*.8+.2}`;
+    c.appendChild(s);
+  }
+})();
+
+// ── Avatars ───────────────────────────────────────────────
+const AVATARS=[
+  {emoji:'🧑‍🚀',name:'Astronaut'},{emoji:'🦸',name:'Superhero'},{emoji:'🧙',name:'Wizard'},
+  {emoji:'🧜',name:'Mermaid'},{emoji:'🤖',name:'Robot'},{emoji:'🦊',name:'Fox'},
+  {emoji:'🐉',name:'Dragon'},{emoji:'🦁',name:'Lion'},{emoji:'🐸',name:'Frog'},
+  {emoji:'🦋',name:'Butterfly'},{emoji:'🧚',name:'Fairy'},{emoji:'🦄',name:'Unicorn'},
+  {emoji:'🐺',name:'Wolf'},{emoji:'🦅',name:'Eagle'},{emoji:'🐼',name:'Panda'},
+  {emoji:'🎃',name:'Pumpkin'},{emoji:'⭐',name:'Star'},{emoji:'🌈',name:'Rainbow'},
+  {emoji:'🔥',name:'Fire'},{emoji:'⚡',name:'Lightning'},
+];
+
+// ── Themes ────────────────────────────────────────────────
+const THEMES=[
+  {id:'space',   emoji:'🚀', name:'Space',         desc:'Classic night sky',      preview:'linear-gradient(135deg,#0d0a2e,#231e6e)'},
+  {id:'stealth', emoji:'🎯', name:'Stealth',        desc:'Dark tech for teens',    preview:'linear-gradient(135deg,#0a0a0a,#1e1e1e)'},
+  {id:'rainbow', emoji:'🌈', name:'Rainbow',        desc:'Vibrant & dreamy',       preview:'linear-gradient(135deg,#1a0533,#bf5fff,#00cfff)'},
+  {id:'seaside', emoji:'🌊', name:'Seaside',        desc:'Ocean vibes',            preview:'linear-gradient(135deg,#003d5b,#006d8f,#40c4ff)'},
+  {id:'fantasy', emoji:'🧚', name:'Fantasy Island', desc:'Magical & whimsical',    preview:'linear-gradient(135deg,#0d001a,#26004d,#cc66ff)'},
+  {id:'jungle',  emoji:'🌴', name:'Jungle',         desc:'Wild & adventurous',     preview:'linear-gradient(135deg,#071a07,#1a4a1a,#76ff03)'},
+  {id:'scifi',   emoji:'👾', name:'Sci-Fi',         desc:'Future is now',          preview:'linear-gradient(135deg,#00001a,#000047,#0077ff)'},
+];
+
+// ── Nudge banks ───────────────────────────────────────────
+const NUDGES={
+  young:{
+    teeth:["Uh oh! The sugar monsters are having a PARTY in your mouth! Let's kick them out!","Nasty germs love feasting on lovely teeth — let's send them packing!","Your teeth are crying out for that toothbrush — go rescue them!"],
+    brush:["The sugar monsters are partying in there! Time to brush them away!","Your toothbrush is lonely — go give it a job to do!"],
+    wash:["The stinky cloud is forming! Invisible but everyone can smell it — blast it away!","Soap is basically a superpower against germs. Go activate yours!"],
+    shower:["The stinky cloud is forming! Time to blast it away with water and soap!","Five minutes in the shower and you'll feel like a new person!"],
+    dressed:["Your uniform is sitting there feeling lonely! It needs a hero — that's you!","Pyjamas are amazing but NOT allowed at school. Time to suit up!"],
+    clothes:["Your outfit won't put itself on — go be the hero!","Pyjamas at school? I don't think so — go get changed!"],
+    breakfast:["Your brain is running on empty! It needs fuel or it'll fall asleep!","Breakfast is a cheat code for your brain. Go unlock it!"],
+    eat:["Food is fuel — go fill up your tank!","Your tummy is planning to be grumpy later. Feed it now!"],
+    bag:["Imagine arriving with nothing — mission fail! Go pack that bag!","Your homework is in there feeling nervous. Go rescue it!"],
+    pack:["Imagine arriving with nothing — mission fail! Go pack that bag!"],
+    shoes:["Bare feet at school? I don't think so! Go find those shoes!","Your shoes are lonely without your feet in them!"],
+    sleep:["Your bed is calling your name — it's very cosy in there!","The sooner you sleep, the sooner tomorrow comes!"],
+    bed:["Your pillow is waiting! Go give it a cuddle!","Dreams won't start without you in bed — go!"],
+  },
+  teen:{
+    teeth:["Cavities are expensive and painful — two minutes now saves a lot of pain later.","Bad breath is not the vibe. Brush your teeth.","Your future self will thank you. Go brush."],
+    brush:["Bad breath is not the vibe. Brush your teeth.","Two minutes now, no dentist drills later."],
+    wash:["Just shower. It takes five minutes and you'll feel way better.","Fresh start, fresh mind. Go wash up."],
+    shower:["Five minutes, warm water, done. You've got this.","Shower. You know it needs to happen."],
+    dressed:["You can't go out in that. Go get dressed.","Looking the part helps you feel the part."],
+    clothes:["Clothes won't put themselves on. Go sort it.","Five minutes to get dressed. You can do that."],
+    breakfast:["Your brain literally cannot focus without fuel. Go eat something.","No breakfast means crashing by 10am. Don't do that to yourself."],
+    eat:["You need fuel. Go get some food.","Running on empty is not a good look. Go eat."],
+    bag:["Don't be the person who turns up with nothing. Go pack your bag.","Future you will be really annoyed if you forget something. Go check."],
+    pack:["Five minutes to pack now saves a stressful morning. Go do it."],
+    shoes:["You literally cannot leave without shoes. Go find them."],
+    sleep:["Sleep is when your brain processes everything. You need it.","Put the phone down. Your brain needs to recharge."],
+    bed:["The sooner you're in bed, the sooner tomorrow arrives.","You know you're tired. Just go."],
+  }
+};
+
+function getNudges(taskText){
+  const lower=taskText.toLowerCase();
+  const bank=settings.ageGroup==='teen'?NUDGES.teen:NUDGES.young;
+  for(const[key,nudges]of Object.entries(bank)){
+    if(lower.includes(key))return nudges;
+  }
+  return settings.ageGroup==='teen'
+    ?['Sort this out now so you can move on.','It\'s on the list for a reason. Go do it.','You\'ve got this — just go.']
+    :['Go on — every task gets you closer to your reward!','You\'ve totally got this — it\'ll only take a minute!','Off you go — I\'ll be here when you\'re back!'];
+}
+
+// ── State ─────────────────────────────────────────────────
+let routines=[], kidName='';
+let settings={pin:'1234',theme:'space',ageGroup:'young',avatar:'⭐'};
+let editingIdx=-1, editTasks=[];
+let activeRoutine=null, currentIdx=0;
+let recognizer=null, isListening=false;
+let pinTarget='', pinBuffer='';
+let taskTimerInterval=null, taskTimerRemaining=0, snoozeUsed=false;
+let aiWho='child', aiGeneratedTasks=[], aiGeneratedName='';
+
+// ── Persistence ───────────────────────────────────────────
+function loadData(){
+  try{
+    const r=localStorage.getItem('routinely_v2_routines');
+    if(r)routines=JSON.parse(r);
+    kidName=localStorage.getItem('routinely_v2_name')||'';
+    const s=localStorage.getItem('routinely_v2_settings');
+    if(s)settings={...settings,...JSON.parse(s)};
+  }catch(e){}
+  if(!routines.length)seedDefaults();
+}
+function saveData(){
+  try{
+    localStorage.setItem('routinely_v2_routines',JSON.stringify(routines));
+    localStorage.setItem('routinely_v2_name',kidName);
+    localStorage.setItem('routinely_v2_settings',JSON.stringify(settings));
+  }catch(e){}
+}
+function saveName(){
+  kidName=document.getElementById('kid-name').value.trim();
+  updateHomeAvatar();
+  saveData();
+}
+function seedDefaults(){
+  routines=[
+    {id:Date.now(),name:'Morning Routine',emoji:'🌅',reward:'30 minutes of screen time!',voice:'friendly',tasks:[
+      {emoji:'🦷',text:'Brush your teeth',mins:3},
+      {emoji:'🚿',text:'Have a shower',mins:5},
+      {emoji:'👕',text:'Get dressed',mins:5},
+      {emoji:'🥣',text:'Eat your breakfast',mins:10},
+      {emoji:'🎒',text:'Pack your school bag',mins:5},
+    ]},
+    {id:Date.now()+1,name:'Bedtime Routine',emoji:'🌙',reward:'Extra story time!',voice:'slow',tasks:[
+      {emoji:'🛁',text:'Have a bath',mins:10},
+      {emoji:'🦷',text:'Brush your teeth',mins:3},
+      {emoji:'😴',text:'Put your pyjamas on',mins:3},
+      {emoji:'📖',text:'Read your book',mins:15},
+      {emoji:'💡',text:'Lights out',mins:null},
+    ]},
+  ];
+  saveData();
+}
+
+// ── Avatar ────────────────────────────────────────────────
+function renderAvatarPicker(){
+  const grid=document.getElementById('avatar-grid');
+  grid.innerHTML='';
+  AVATARS.forEach(a=>{
+    const el=document.createElement('div');
+    el.className='avatar-opt'+(settings.avatar===a.emoji?' selected':'');
+    el.innerHTML=`${a.emoji}<div class="avatar-name">${a.name}</div>`;
+    el.onclick=()=>{
+      settings.avatar=a.emoji;
+      document.querySelectorAll('.avatar-opt').forEach(o=>o.classList.remove('selected'));
+      el.classList.add('selected');
+      // Update the preview at top of avatar screen
+      const preview=document.getElementById('avatar-preview');
+      if(preview)preview.textContent=a.emoji;
+    };
+    grid.appendChild(el);
+  });
+  // Show currently selected avatar as preview
+  const existing=document.getElementById('avatar-preview');
+  if(!existing){
+    const preview=document.createElement('div');
+    preview.id='avatar-preview';
+    preview.style.cssText='font-size:4rem;text-align:center;margin-bottom:12px;animation:float 3s ease-in-out infinite alternate';
+    preview.textContent=settings.avatar||'⭐';
+    grid.parentNode.insertBefore(preview,grid);
+  }
+}
+function updateHomeAvatar(){
+  const av=settings.avatar||'⭐';
+  document.getElementById('home-avatar').textContent=av;
+  const n=kidName||'Who\'s the superstar?';
+  document.getElementById('home-name').textContent=kidName?`${kidName}'s Mission Hub`:'Who\'s the superstar?';
+  document.getElementById('mission-avatar').textContent=av;
+  document.getElementById('reward-avatar').textContent=av;
+}
+
+// ── Theme ─────────────────────────────────────────────────
+function applyTheme(id){
+  document.body.dataset.theme=id==='space'?'':id;
+  const t=THEMES.find(t=>t.id===id)||THEMES[0];
+  document.getElementById('app-logo').textContent=`${t.emoji} Routinely`;
+}
+function renderThemeGrid(){
+  const grid=document.getElementById('theme-grid');
+  grid.innerHTML='';
+  THEMES.forEach(t=>{
+    const el=document.createElement('div');
+    el.className='theme-card'+(settings.theme===t.id?' selected':'');
+    el.innerHTML=`
+      <div class="theme-preview" style="background:${t.preview}"></div>
+      <div class="theme-name">${t.emoji} ${t.name}</div>
+      <div class="theme-desc">${t.desc}</div>
+    `;
+    el.onclick=()=>{
+      settings.theme=t.id;applyTheme(t.id);saveData();renderThemeGrid();
+    };
+    grid.appendChild(el);
+  });
+}
+
+// ── Age group ─────────────────────────────────────────────
+function setAgeGroup(g){
+  settings.ageGroup=g;saveData();
+  // Update settings screen toggles
+  const ay=document.getElementById('age-young');
+  const at=document.getElementById('age-teen');
+  if(ay){ay.classList.toggle('active',g==='young');}
+  if(at){at.classList.toggle('active',g==='teen');}
+  // Update home screen toggles
+  const hay=document.getElementById('home-age-young');
+  const hat=document.getElementById('home-age-teen');
+  if(hay){hay.classList.toggle('active',g==='young');}
+  if(hat){hat.classList.toggle('active',g==='teen');}
+}
+
+// ── PIN ───────────────────────────────────────────────────
+function goToPin(target){
+  pinTarget=target;pinBuffer='';updatePinDots();
+  document.getElementById('pin-sub').textContent='Enter your 4-digit PIN';
+  switchScreen('pin-screen');
+}
+function pinKey(k){
+  if(k==='del')pinBuffer=pinBuffer.slice(0,-1);
+  else if(pinBuffer.length<4)pinBuffer+=k;
+  updatePinDots();
+  if(pinBuffer.length===4)setTimeout(checkPin,150);
+}
+function updatePinDots(){
+  for(let i=0;i<4;i++){
+    const d=document.getElementById(`pd${i}`);
+    d.classList.toggle('filled',i<pinBuffer.length);
+    d.classList.remove('error');
+  }
+}
+function saveAvatar(){
+  saveData();
+  updateHomeAvatar();
+  showSnack('Avatar saved! ' + (settings.avatar||'⭐'));
+  goHome();
+}
+function checkPin(){
+  if(pinBuffer===settings.pin){
+    if(pinTarget==='settings'){initSettings();switchScreen('settings-screen');}
+    else if(pinTarget==='new-routine')newRoutine();
+    else if(pinTarget==='ai')switchScreen('ai-screen');
+    else if(pinTarget.startsWith('edit-'))editRoutine(parseInt(pinTarget.split('-')[1]));
+    pinBuffer='';
+  }else{
+    for(let i=0;i<4;i++)document.getElementById(`pd${i}`).classList.add('error');
+    setTimeout(()=>{pinBuffer='';updatePinDots();},700);
+    showSnack('Wrong PIN — try again!');
+  }
+}
+function changePin(){
+  const v=document.getElementById('new-pin-input').value;
+  if(v.length!==4||!/^\d{4}$/.test(v)){showSnack('PIN must be exactly 4 numbers!');return;}
+  settings.pin=v;saveData();
+  document.getElementById('new-pin-input').value='';
+  showSnack('PIN updated! 🔒');
+}
+function initSettings(){
+  renderThemeGrid();
+  setAgeGroup(settings.ageGroup);
+  document.getElementById('age-young').classList.toggle('active',settings.ageGroup==='young');
+  document.getElementById('age-teen').classList.toggle('active',settings.ageGroup==='teen');
+}
+
+// ── Home ──────────────────────────────────────────────────
+function renderHome(){
+  document.getElementById('kid-name').value=kidName;
+  applyTheme(settings.theme);
+  updateHomeAvatar();
+  setAgeGroup(settings.ageGroup); // keep home toggle in sync
+  const list=document.getElementById('routine-list');
+  list.innerHTML='';
+  if(!routines.length){
+    list.innerHTML=`<p style="color:var(--muted);text-align:center;padding:20px 0;font-size:.88rem">No routines yet — tap + New to create one!</p>`;
+    return;
+  }
+  routines.forEach((r,i)=>{
+    const div=document.createElement('div');
+    div.className='routine-card';
+    div.innerHTML=`
+      <div class="routine-card-header">
+        <div class="routine-icon">${r.emoji}</div>
+        <div class="routine-info">
+          <div class="routine-name">${r.name}</div>
+          <div class="routine-meta">${r.tasks.length} task${r.tasks.length!==1?'s':''} · ${r.reward||'No reward set'}</div>
+        </div>
+        <div class="routine-actions">
+          <button class="btn-icon-sm" onclick="goToPin('edit-${i}')">✏️</button>
+          <button class="btn-icon-sm danger" onclick="deleteRoutine(${i})">🗑️</button>
+          <button class="btn-launch" onclick="launchRoutine(${i})">▶ Start</button>
+        </div>
+      </div>`;
+    list.appendChild(div);
+  });
+}
+function deleteRoutine(i){
+  if(!confirm(`Delete "${routines[i].name}"?`))return;
+  routines.splice(i,1);saveData();renderHome();
+}
+
+// ── AI Generator ──────────────────────────────────────────
+function setWho(w){
+  aiWho=w;
+  document.querySelectorAll('.ai-who-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById(`who-${w}`).classList.add('active');
+}
+
+async function generateAIRoutine(){
+  const goal=document.getElementById('ai-goal').value.trim();
+  if(!goal){showSnack('Tell me what the routine is for!');return;}
+
+  const resultEl=document.getElementById('ai-result');
+  const inner=document.getElementById('ai-result-inner');
+  const saveBtn=document.getElementById('ai-save-btn');
+  resultEl.classList.add('show');
+  saveBtn.style.display='none';
+  inner.innerHTML=`<div class="ai-loading"><span class="spinner">⚙️</span>Building your routine...</div>`;
+
+  const whoMap={child:'a young child (under 10, needs simple clear steps)',teen:'an older child or teenager (10-17, can handle more complex steps)',me:'an adult managing ADHD'};
+  const whoDesc=whoMap[aiWho]||whoMap.child;
+  const ageGroup=settings.ageGroup;
+
+  const prompt=`You are an expert ADHD coach creating a step-by-step routine for ${whoDesc}.
+
+Goal: "${goal}"
+
+Create a practical routine with 5-10 tasks that breaks this goal into clear, manageable steps. Each task should be specific and actionable.
+
+Respond ONLY with valid JSON in this exact format, no other text:
+{
+  "routineName": "Short routine name",
+  "emoji": "one relevant emoji",
+  "reward": "A motivating reward suggestion",
+  "tasks": [
+    {"emoji": "relevant emoji", "text": "task description", "mins": estimated_minutes_as_number_or_null}
+  ]
+}
+
+Rules:
+- Task text should start with a verb (Research, Write, Draw, Find, etc.)
+- Keep task text under 40 characters
+- mins should be realistic (1-60), null if not applicable
+- Make it encouraging and appropriate for the age group
+- Emoji should be relevant to each task`;
+
+  try{
+    const response=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:1000,
+        messages:[{role:'user',content:prompt}]
+      })
+    });
+    const data=await response.json();
+    const text=data.content?.find(b=>b.type==='text')?.text||'';
+    const clean=text.replace(/```json|```/g,'').trim();
+    const parsed=JSON.parse(clean);
+
+    aiGeneratedTasks=parsed.tasks||[];
+    aiGeneratedName=document.getElementById('ai-routine-name').value.trim()||parsed.routineName||'AI Routine';
+
+    let html=`<h3 style="font-family:'Baloo 2',cursive;color:var(--accent2);margin-bottom:10px">${parsed.emoji} ${parsed.routineName}</h3>`;
+    html+=`<p style="font-size:.78rem;color:var(--muted);margin-bottom:10px">🏆 Suggested reward: ${parsed.reward}</p>`;
+    parsed.tasks.forEach(t=>{
+      html+=`<div class="ai-task-preview"><span>${t.emoji}</span><span>${t.text}</span>${t.mins?`<span class="t-mins">⏱ ${t.mins}m</span>`:''}</div>`;
+    });
+
+    inner.innerHTML=html;
+    saveBtn.style.display='block';
+    // Store reward for saving
+    saveBtn.dataset.reward=parsed.reward;
+    saveBtn.dataset.emoji=parsed.emoji;
+  }catch(err){
+    console.error(err);
+    inner.innerHTML=`<p style="color:var(--accent1);text-align:center;font-size:.88rem">Something went wrong — check your internet and try again!</p>`;
+  }
+}
+
+function saveAIRoutine(){
+  if(!aiGeneratedTasks.length){showSnack('Generate a routine first!');return;}
+  const saveBtn=document.getElementById('ai-save-btn');
+  const routine={
+    id:Date.now(),
+    name:aiGeneratedName,
+    emoji:saveBtn.dataset.emoji||'📋',
+    reward:saveBtn.dataset.reward||'Well done!',
+    voice:'friendly',
+    tasks:aiGeneratedTasks
+  };
+  routines.push(routine);
+  saveData();
+  showSnack(`"${aiGeneratedName}" saved! ✅`);
+  document.getElementById('ai-goal').value='';
+  document.getElementById('ai-routine-name').value='';
+  document.getElementById('ai-result').classList.remove('show');
+  setTimeout(goHome,800);
+}
+
+// ── Edit ──────────────────────────────────────────────────
+let dragSrcIdx=null;
+function newRoutine(){
+  editingIdx=-1;editTasks=[];
+  document.getElementById('edit-title').textContent='New Routine';
+  document.getElementById('edit-emoji').value='🌟';
+  document.getElementById('edit-name').value='';
+  document.getElementById('edit-reward').value='';
+  document.querySelector('input[name="vt"][value="friendly"]').checked=true;
+  renderDragList();switchScreen('edit-screen');
+}
+function editRoutine(i){
+  editingIdx=i;
+  const r=routines[i];
+  editTasks=r.tasks.map(t=>({...t}));
+  document.getElementById('edit-title').textContent='Edit Routine';
+  document.getElementById('edit-emoji').value=r.emoji||'🌟';
+  document.getElementById('edit-name').value=r.name;
+  document.getElementById('edit-reward').value=r.reward||'';
+  const vt=document.querySelector(`input[name="vt"][value="${r.voice||'friendly'}"]`);
+  if(vt)vt.checked=true;
+  renderDragList();switchScreen('edit-screen');
+}
+function saveRoutine(){
+  const name=document.getElementById('edit-name').value.trim();
+  const emoji=document.getElementById('edit-emoji').value;
+  const reward=document.getElementById('edit-reward').value.trim();
+  const voice=document.querySelector('input[name="vt"]:checked')?.value||'friendly';
+  if(!name){showSnack('Give your routine a name!');return;}
+  if(!editTasks.length){showSnack('Add at least one task!');return;}
+  const obj={id:editingIdx>=0?routines[editingIdx].id:Date.now(),name,emoji,reward,voice,tasks:[...editTasks]};
+  if(editingIdx>=0)routines[editingIdx]=obj;else routines.push(obj);
+  saveData();goHome();
+}
+function renderDragList(){
+  const ul=document.getElementById('drag-list');ul.innerHTML='';
+  editTasks.forEach((t,i)=>{
+    const li=document.createElement('li');
+    li.className='drag-item';li.draggable=true;li.dataset.idx=i;
+    li.innerHTML=`<span class="drag-handle">☰</span><span class="drag-emoji">${t.emoji}</span><span class="drag-text">${t.text}</span>${t.mins?`<span class="drag-timer">⏱${t.mins}m</span>`:''}<button class="drag-del" onclick="removeEditTask(${i})">✕</button>`;
+    li.addEventListener('dragstart',()=>{dragSrcIdx=i;li.classList.add('dragging');});
+    li.addEventListener('dragend',()=>li.classList.remove('dragging'));
+    li.addEventListener('dragover',e=>{e.preventDefault();li.classList.add('drag-over');});
+    li.addEventListener('dragleave',()=>li.classList.remove('drag-over'));
+    li.addEventListener('drop',e=>{
+      e.preventDefault();li.classList.remove('drag-over');
+      if(dragSrcIdx===null||dragSrcIdx===i)return;
+      const m=editTasks.splice(dragSrcIdx,1)[0];editTasks.splice(i,0,m);dragSrcIdx=null;renderDragList();
+    });
+    setupTouchDrag(li,i);
+    ul.appendChild(li);
+  });
+}
+function setupTouchDrag(el,idx){
+  let startY,clone;
+  const handle=el.querySelector('.drag-handle');
+  handle.addEventListener('touchstart',e=>{
+    e.preventDefault();startY=e.touches[0].clientY;dragSrcIdx=idx;
+    clone=el.cloneNode(true);
+    const r=el.getBoundingClientRect();
+    clone.style.cssText=`position:fixed;left:${r.left}px;top:${r.top}px;width:${el.offsetWidth}px;opacity:.85;z-index:500;pointer-events:none;border:2px solid var(--accent4);border-radius:12px;background:var(--surface);`;
+    document.body.appendChild(clone);el.style.opacity='.3';
+  },{passive:false});
+  handle.addEventListener('touchmove',e=>{
+    e.preventDefault();if(!clone)return;
+    const dy=e.touches[0].clientY-startY;
+    clone.style.top=(parseFloat(clone.style.top)+dy)+'px';startY=e.touches[0].clientY;
+    document.querySelectorAll('.drag-item').forEach(i=>i.classList.remove('drag-over'));
+    const h=document.elementsFromPoint(e.touches[0].clientX,e.touches[0].clientY).find(el=>el.classList.contains('drag-item'));
+    if(h&&parseInt(h.dataset.idx)!==dragSrcIdx)h.classList.add('drag-over');
+  },{passive:false});
+  handle.addEventListener('touchend',e=>{
+    if(!clone)return;clone.remove();clone=null;el.style.opacity='';
+    const h=document.elementsFromPoint(e.changedTouches[0].clientX,e.changedTouches[0].clientY).find(el=>el.classList.contains('drag-item'));
+    document.querySelectorAll('.drag-item').forEach(i=>i.classList.remove('drag-over'));
+    if(h){const ti=parseInt(h.dataset.idx);if(ti!==dragSrcIdx&&!isNaN(ti)){const m=editTasks.splice(dragSrcIdx,1)[0];editTasks.splice(ti,0,m);renderDragList();}}
+    dragSrcIdx=null;
+  });
+}
+function addTaskToEdit(){
+  const inp=document.getElementById('new-task-input');
+  const emoji=document.getElementById('task-emoji').value;
+  const text=inp.value.trim();
+  const minsRaw=document.getElementById('new-task-timer').value;
+  const mins=minsRaw&&parseInt(minsRaw)>0?parseInt(minsRaw):null;
+  if(!text){showSnack('Type a task first!');return;}
+  editTasks.push({emoji,text,mins});
+  inp.value='';document.getElementById('new-task-timer').value='';
+  renderDragList();
+}
+document.getElementById('new-task-input').addEventListener('keydown',e=>{if(e.key==='Enter')addTaskToEdit();});
+function removeEditTask(i){editTasks.splice(i,1);renderDragList();}
+
+// ── Speech OUTPUT ─────────────────────────────────────────
+let voices=[];
+if('speechSynthesis' in window){
+  speechSynthesis.onvoiceschanged=()=>{voices=speechSynthesis.getVoices();};
+  setTimeout(()=>{voices=speechSynthesis.getVoices();},600);
+}
+function getVoiceParams(){
+  const v=activeRoutine?.voice||'friendly';
+  if(v==='robot')return{rate:.8,pitch:.5};
+  if(v==='slow')return{rate:.68,pitch:1.05};
+  return{rate:.9,pitch:1.2};
+}
+function speak(text,onEnd){
+  if(!('speechSynthesis' in window)){if(onEnd)onEnd();return;}
+  speechSynthesis.cancel();
+  const utt=new SpeechSynthesisUtterance(text);
+  const{rate,pitch}=getVoiceParams();
+  utt.rate=rate;utt.pitch=pitch;utt.volume=1;
+  const uk=voices.find(v=>v.lang&&v.lang.startsWith('en-GB'));
+  if(uk)utt.voice=uk;
+  if(onEnd)utt.onend=onEnd;
+  speechSynthesis.speak(utt);
+}
+
+// ── Speech INPUT ──────────────────────────────────────────
+const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+const hasSR=!!SR;
+function setupRecognizer(){
+  if(!hasSR)return;
+  if(recognizer)try{recognizer.abort();}catch(e){}
+  recognizer=new SR();
+  recognizer.lang='en-GB';recognizer.continuous=false;recognizer.interimResults=false;recognizer.maxAlternatives=5;
+  recognizer.onresult=e=>{
+    const results=Array.from(e.results[0]).map(r=>r.transcript.toLowerCase().trim());
+    setListening(false);handleVoiceResult(results);
+  };
+  recognizer.onerror=err=>{
+    setListening(false);
+    if(err.error==='not-allowed'||err.error==='permission-denied')showMicModal();
+    else if(err.error==='no-speech'){
+      // Silently restart — no-speech just means they haven't spoken yet
+      if(activeRoutine && currentIdx<activeRoutine.tasks.length){
+        setTimeout(()=>startListen(),600);
+      }
+    }
+    else setBubble(`Didn't catch that — tap YES or NO 👇`,'');
+  };
+  recognizer.onend=()=>{
+    setListening(false);
+    // Auto-restart if we're still in a mission and not done
+    if(activeRoutine && currentIdx<activeRoutine.tasks.length){
+      setTimeout(()=>{
+        try{ recognizer.start(); setListening(true); }
+        catch(e){
+          // recognizer needs rebuilding
+          setupRecognizer();
+          setTimeout(()=>{ try{ recognizer.start(); setListening(true); }catch(e2){} },300);
+        }
+      },800);
+    }
+  };
+}
+function toggleListen(){isListening?stopListen():startListen();}
+function startListen(){
+  if(!hasSR){setBubble(`Voice not available — use the buttons below 👇`,'');return;}
+  try{
+    if(!recognizer)setupRecognizer();
+    recognizer.start();setListening(true);
+  }catch(e){
+    try{recognizer.abort();}catch(e2){}
+    setTimeout(()=>{setupRecognizer();try{recognizer.start();setListening(true);}catch(e3){}},300);
+  }
+}
+function stopListen(){if(recognizer)try{recognizer.stop();}catch(e){}setListening(false);}
+function setListening(val){
+  isListening=val;
+  const btn=document.getElementById('mic-btn');
+  const dots=document.getElementById('listen-dots');
+  const lbl=document.getElementById('mic-label');
+  if(val){btn.classList.add('listening');btn.textContent='🔴';dots.classList.add('active');lbl.textContent='Listening... say YES or NO';}
+  else{btn.classList.remove('listening');btn.textContent='🎤';dots.classList.remove('active');lbl.textContent='Tap mic or use buttons below';}
+}
+const YES_WORDS=['yes','yeah','yep','yup','done','i'm done','im done','finished','i'm finished','im finished','all done','sorted','ready','i did','i have','sure','okay','aye','correct','absolutely','definitely','complete','completed'];
+const NO_WORDS=['no','nope','not yet','not done','nah','negative','haven't','wait','not finished'];
+const MORE_TIME_WORDS=['more time','need more','i need more','not ready','not quite','almost','give me','wait','one minute','two minutes','a minute','a second'];
+function handleVoiceResult(results){
+  const combined = results.join(' ').toLowerCase().trim();
+  const first = (results[0]||'').toLowerCase().trim();
+
+  // Direct single-word/phrase checks first
+  const doneExact=['done',"i'm done",'im done','finished',"i'm finished",'im finished','all done','sorted','yes','yeah','ready'];
+  const noExact=['no','nope','not yet'];
+  const moreExact=['more time','need more time','i need more time','not ready','almost','give me more'];
+
+  if(doneExact.some(w=>first===w||first.startsWith(w))){ answerYes(); return; }
+  if(noExact.some(w=>first===w)){ answerNo(); return; }
+  if(moreExact.some(w=>combined.includes(w))){ needMoreTime(); return; }
+
+  // Broader check across all alternatives
+  if(YES_WORDS.some(w=>combined.includes(w))){ answerYes(); return; }
+  if(MORE_TIME_WORDS.some(w=>combined.includes(w))){ needMoreTime(); return; }
+  if(NO_WORDS.some(w=>combined.includes(w))){ answerNo(); return; }
+
+  // Didn't catch it — show what we heard and keep listening
+  setBubble(`I heard "${results[0]}" — say DONE or NOT YET! 🎤`,'');
+  setTimeout(startListen, 1000);
+}
+function showMicModal(){
+  const steps=document.getElementById('mic-steps');
+  if(/android/i.test(navigator.userAgent)){
+    steps.innerHTML=`<li>Tap the <strong>🔒 lock / info icon</strong> in the address bar</li><li>Tap <strong>Permissions → Microphone → Allow</strong></li><li>Refresh the page</li>`;
+  }
+  document.getElementById('mic-modal').classList.add('show');
+}
+function closeMicModal(){
+  document.getElementById('mic-modal').classList.remove('show');
+  setupRecognizer();setTimeout(startListen,400);
+}
+
+// ── Timer ─────────────────────────────────────────────────
+const CIRC=2*Math.PI*17;
+function startTaskTimer(mins){
+  clearTaskTimer();if(!mins)return;
+  snoozeUsed=false;taskTimerRemaining=mins*60;
+  const wrap=document.getElementById(`timer-wrap-${currentIdx}`);
+  if(!wrap)return;
+  updateTimerRing(wrap,taskTimerRemaining,mins*60);
+  taskTimerInterval=setInterval(()=>{
+    taskTimerRemaining--;
+    updateTimerRing(wrap,taskTimerRemaining,mins*60);
+    if(taskTimerRemaining<=0){clearTaskTimer();timerExpired();}
+  },1000);
+}
+function updateTimerRing(wrap,remaining,total){
+  const fg=wrap.querySelector('.timer-ring-fg');
+  const txt=wrap.querySelector('.timer-text');
+  if(!fg||!txt)return;
+  fg.style.strokeDashoffset=CIRC*(1-(remaining/total));
+  const m=Math.floor(remaining/60),s=remaining%60;
+  txt.textContent=m>0?`${m}m`:`${s}s`;
+  wrap.classList.toggle('urgent',remaining<=30);
+}
+function clearTaskTimer(){
+  if(taskTimerInterval)clearInterval(taskTimerInterval);
+  taskTimerInterval=null;
+}
+function timerExpired(){
+  stopListen();
+  if(!activeRoutine||currentIdx>=activeRoutine.tasks.length)return;
+  const t=activeRoutine.tasks[currentIdx];
+  showExpiredMode();
+
+  // First ask if they're done, then offer more time
+  const msg=`Hey ${kidName}! Time's up. ${makePrompt(t.text)} Say DONE if you've finished, or say MORE TIME if you need longer!`;
+  setBubble(`⏰ Time's up! Are you done, or do you need more time?`,'nudge');
+  speak(msg,()=>setTimeout(startListen,500));
+}
+
+function needMoreTime(){
+  stopListen();clearTaskTimer();
+  if(!activeRoutine||currentIdx>=activeRoutine.tasks.length)return;
+  const t=activeRoutine.tasks[currentIdx];
+  // Half the original task time, minimum 1 minute
+  const extraMins=Math.max(1,Math.ceil((t.mins||4)/2));
+  const msg=settings.ageGroup==='teen'
+    ?`Alright, ${extraMins} more minute${extraMins>1?'s':''}. Get it done.`
+    :`No problem ${kidName}! You've got ${extraMins} more minute${extraMins>1?'s':''}. You've got this!`;
+  setBubble(`⏰ ${extraMins} more minute${extraMins>1?'s':''} — go go go!`,'');
+  speak(msg,()=>{
+    showTaskMode();
+    startTaskTimer(extraMins);
+    setTimeout(()=>{setBubble(`Say DONE when you're finished! 🎤`,'');startListen();},400);
+  });
+}
+
+// ── Mission ───────────────────────────────────────────────
+function launchRoutine(i){
+  kidName=document.getElementById('kid-name').value.trim()||'Superstar';
+  saveData();
+  activeRoutine={...routines[i],tasks:[...routines[i].tasks]};
+  currentIdx=0;
+  document.getElementById('mission-title').textContent=`${kidName}'s ${activeRoutine.emoji} Mission`;
+  document.getElementById('mission-avatar').textContent=settings.avatar||'⭐';
+  buildMissionCards();updateProgress();
+  switchScreen('mission-screen');
+  setupRecognizer();
+  // Show task buttons immediately — don't wait for speech
+  document.getElementById('btn-done').style.display='block';
+  document.getElementById('btn-more-time').style.display='block';
+  document.getElementById('expired-zone').style.display='none';
+  setBubble(`Let's go, ${kidName}! 🚀`,'');
+  setTimeout(()=>speakCurrentTask(),800);
+}
+function buildMissionCards(){
+  const c=document.getElementById('task-cards');c.innerHTML='';
+  activeRoutine.tasks.forEach((t,i)=>{
+    const el=document.createElement('div');
+    el.className='task-card'+(i===0?' active-card':'');
+    el.id=`card-${i}`;
+    el.onclick=()=>{if(i===currentIdx)speakCurrentTask();};
+    el.innerHTML=`
+      <div class="task-card-emoji">${t.emoji}</div>
+      <div class="task-card-body">
+        <div class="task-card-name">${makePrompt(t.text)}</div>
+        <div class="task-card-hint" id="hint-${i}">${i===0?'Current task ✨'+(t.mins?` · ${t.mins} mins`:''):'Coming up...'}</div>
+      </div>
+      ${t.mins?`
+      <div class="timer-ring-wrap" id="timer-wrap-${i}">
+        <svg width="42" height="42" viewBox="0 0 42 42">
+          <circle class="timer-ring-bg" cx="21" cy="21" r="17" stroke-dasharray="${CIRC}" stroke-dashoffset="0"/>
+          <circle class="timer-ring-fg" cx="21" cy="21" r="17" stroke-dasharray="${CIRC}" stroke-dashoffset="${CIRC}"/>
+        </svg>
+        <span class="timer-text">${t.mins}m</span>
+      </div>`:`<div class="task-check" id="check-${i}"></div>`}
+    `;
+    c.appendChild(el);
+  });
+}
+function makePrompt(text){
+  const lower=text.trim().toLowerCase();
+  if(lower.endsWith('?'))return text.charAt(0).toUpperCase()+text.slice(1);
+  if(/^(have you|did you|are you|can you)/.test(lower))return text.charAt(0).toUpperCase()+text.slice(1)+'?';
+  const map={
+    'brush':'brushed','wash':'washed','eat':'eaten','get dressed':'got dressed',
+    'pack':'packed','put on':'put on','take':'taken','drink':'drunk','make':'made',
+    'tidy':'tidied','do':'done','have':'had','read':'read','clean':'cleaned',
+    'charge':'charged','find':'found','check':'checked','turn off':'turned off',
+    'switch off':'switched off','lock':'locked','close':'closed','finish':'finished',
+    'sort':'sorted','grab':'grabbed','fill':'filled','research':'researched',
+    'write':'written','draw':'drawn','plan':'planned','collect':'collected',
+    'organise':'organised','prepare':'prepared','review':'reviewed','practise':'practised',
+  };
+  for(const[base,past]of Object.entries(map)){
+    if(lower.startsWith(base+' ')||lower===base){
+      const rest=lower.slice(base.length).trim();
+      return `Have you ${rest?past+' '+rest:past}?`;
+    }
+  }
+  return `Have you ${lower}?`;
+}
+function speakCurrentTask(){
+  if(currentIdx>=activeRoutine.tasks.length)return;
+  const t=activeRoutine.tasks[currentIdx];
+  const taskName=t.text.toLowerCase().replace(/^(have you |did you )/,'');
+  const announce=t.mins
+    ?`Hey ${kidName}! Time to ${taskName}. You have ${t.mins} minute${t.mins>1?'s':''}. Off you go!`
+    :`Hey ${kidName}! Time to ${taskName}. Off you go — say done when you're finished!`;
+  setBubble(`Time to ${taskName}! 🚀`,'');
+  showTaskMode();
+  speak(announce,()=>{
+    startTaskTimer(t.mins);
+    setTimeout(()=>{setBubble(`Say DONE when you're finished — I'm listening! 🎤`,'');startListen();},500);
+  });
+}
+
+function showTaskMode(){
+  document.getElementById('btn-done').style.display='block';
+  document.getElementById('btn-more-time').style.display='block';
+  document.getElementById('expired-zone').style.display='none';
+  document.getElementById('mic-label').textContent="Say DONE when you've finished!";
+}
+
+function showExpiredMode(){
+  document.getElementById('btn-done').style.display='none';
+  document.getElementById('btn-more-time').style.display='none';
+  document.getElementById('expired-zone').style.display='block';
+  const t=activeRoutine.tasks[currentIdx];
+  document.getElementById('expired-label').textContent=makePrompt(t.text);
+  document.getElementById('mic-label').textContent='Say YES or NO!';
+}
+
+function setBubble(text,type){
+  const b=document.getElementById('voice-bubble');
+  b.textContent=text;b.className='voice-bubble'+(type?' '+type:'');
+}
+function updateProgress(){
+  document.getElementById('progress-bar').style.width=(currentIdx/(activeRoutine?.tasks.length||1)*100)+'%';
+}
+function answerYes(){
+  stopListen();clearTaskTimer();
+  document.getElementById('btn-done').style.display='none';
+  document.getElementById('btn-more-time').style.display='none';
+  document.getElementById('expired-zone').style.display='none';
+  if(!activeRoutine||currentIdx>=activeRoutine.tasks.length)return;
+  const card=document.getElementById(`card-${currentIdx}`);
+  const hint=document.getElementById(`hint-${currentIdx}`);
+  card.classList.remove('active-card');card.classList.add('done');
+  hint.textContent='Done! 🎉';
+  const wrap=document.getElementById(`timer-wrap-${currentIdx}`);
+  if(wrap){
+    wrap.style.display='none';
+    const chk=document.createElement('div');chk.className='task-check';
+    chk.textContent='✅';chk.style.cssText='background:var(--accent3);border-color:var(--accent3);transform:scale(1.15)';
+    card.appendChild(chk);
+  }else{
+    const chk=document.getElementById(`check-${currentIdx}`);
+    if(chk)chk.textContent='✅';
+  }
+  const praise=settings.ageGroup==='teen'
+    ?[`Sorted! Keep going.`,`Nice one, ${kidName}.`,`Done. Next one.`,`Good work — keep the momentum.`,`One down. You've got this.`]
+    :[`Amazing, ${kidName}! You're on fire!`,`Yes! Let's go — you're crushing it!`,`Brilliant! Keep going!`,`Smashed it! One step closer!`,`You absolute legend! Next one!`];
+  const msg=praise[currentIdx%praise.length];
+  setBubble(msg,'praise');
+  currentIdx++;updateProgress();
+  if(currentIdx>=activeRoutine.tasks.length){
+    speak(msg,()=>setTimeout(showReward,600));
+  }else{
+    speak(msg,()=>{
+      document.getElementById(`card-${currentIdx}`).classList.add('active-card');
+      document.getElementById(`hint-${currentIdx}`).textContent='Current task ✨';
+      setTimeout(speakCurrentTask,500);
+    });
+  }
+}
+function answerNo(){
+  stopListen();
+  if(!activeRoutine||currentIdx>=activeRoutine.tasks.length)return;
+  const t=activeRoutine.tasks[currentIdx];
+  const nudges=getNudges(t.text);
+  const nudge=nudges[Math.floor(Math.random()*nudges.length)];
+  setBubble(nudge,'nudge');
+  speak(`${nudge} Come back and say DONE when you're finished!`,()=>{
+    setTimeout(()=>{
+      showTaskMode(); // back to DONE button mode
+      setBubble(`Go do it — say DONE when you're finished! 🎤`,'');
+      startListen();
+    },800);
+  });
+}
+function showReward(){
+  clearTaskTimer();
+  document.getElementById('reward-title').textContent=`You did it, ${kidName}! 🎊`;
+  document.getElementById('reward-msg').textContent=`Every single task — done. You are an absolute superstar.`;
+  document.getElementById('reward-box').textContent=`🏆 ${activeRoutine?.reward||'Amazing work!'}`;
+  document.getElementById('reward-avatar').textContent=settings.avatar||'⭐';
+  switchScreen('reward-screen');
+  launchConfetti();
+  setTimeout(()=>speak(`Oh my goodness, ${kidName}! You finished every single task! That is absolutely incredible! Your reward is: ${activeRoutine?.reward||'well done'}! You total superstar!`),400);
+}
+function launchConfetti(){
+  const cols=['#ff6b6b','#ffd93d','#6bcb77','#4d96ff','#c084fc','#fb923c','#ff6ec7'];
+  for(let i=0;i<80;i++){
+    setTimeout(()=>{
+      const el=document.createElement('div');el.className='confetti-piece';
+      el.style.cssText=`left:${Math.random()*100}vw;background:${cols[~~(Math.random()*cols.length)]};--fd:${Math.random()*2+2}s;animation-delay:${Math.random()*.8}s;border-radius:${Math.random()>.5?'50%':'2px'};width:${Math.random()*9+5}px;height:${Math.random()*9+5}px;`;
+      document.body.appendChild(el);setTimeout(()=>el.remove(),4000);
+    },i*30);
+  }
+}
+
+// ── Nav ───────────────────────────────────────────────────
+function goHome(){
+  try{stopListen();}catch(e){}
+  try{clearTaskTimer();}catch(e){}
+  if('speechSynthesis' in window)try{speechSynthesis.cancel();}catch(e){}
+  activeRoutine=null;currentIdx=0;
+  const sb=document.getElementById('snooze-banner');
+  if(sb)sb.classList.remove('show');
+  const bd=document.getElementById('btn-done');
+  if(bd)bd.style.display='none';
+  const bmt=document.getElementById('btn-more-time');
+  if(bmt)bmt.style.display='none';
+  renderHome();switchScreen('home-screen');
+}
+function switchScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+  if(id==='avatar-screen')renderAvatarPicker();
+}
+function showSnack(msg){
+  const s=document.getElementById('snack');
+  s.textContent=msg;s.classList.add('show');
+  setTimeout(()=>s.classList.remove('show'),2800);
+}
+
+// ── Init ──────────────────────────────────────────────────
+loadData();
+applyTheme(settings.theme);
+renderHome();
+</script>
+</body>
+</html>
